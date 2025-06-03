@@ -20,7 +20,6 @@ const DynamicPage: React.FC = () => {
 	const [error, setError] = useState<string | null>(null)
 
 	useEffect(() => {
-		console.log('slug', slug)
 		const fetchPageData = async () => {
 			try {
 				const slugQuery = slug ? `/${slug}` : '/'
@@ -36,7 +35,6 @@ const DynamicPage: React.FC = () => {
             button->
           }
         }`
-				console.log(query)
 
 				const data = await (client as any).fetch(query)
 

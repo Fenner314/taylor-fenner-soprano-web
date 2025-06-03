@@ -36,8 +36,16 @@ const renderBlock = (block: any) => {
 
 		case 'customComponent':
 			const CustomComponent = getCustomPageComponent(block.component)
+			let componentProps = {}
+			if (block.props) {
+				try {
+					componentProps = JSON.parse(block.props)
+				} catch (err) {
+					console.warn('Invalid JSON in component props:', block.props)
+				}
+			}
 			return CustomComponent ? (
-				<CustomComponent key={block._key || block._id} />
+				<CustomComponent key={block._key || block._id} {...componentProps} />
 			) : null
 
 		default:

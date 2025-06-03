@@ -17,8 +17,6 @@ const customComponents: Record<string, React.FC<CustomComponentProps>> = {
 export const getCustomPageComponent = (
 	componentName: string
 ): React.FC<CustomComponentProps> | null => {
-	console.log(componentName)
-	console.log(customComponents[componentName])
 	return customComponents[componentName] || null
 }
 

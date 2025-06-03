@@ -12,134 +12,225 @@ interface Event {
 	featured?: boolean
 }
 
-const EventsComponent: React.FC<CustomComponentProps> = ({
-	maxItems = 6,
-	showUpcomingOnly = true,
-	showPastEvents = false,
-	calendarId = 'primary', // Google Calendar ID
-	...props
-}) => {
+const calendarId = 'primary'
+const eventsPageUrl = '/events'
+
+const EventsComponent: React.FC<CustomComponentProps> = (props) => {
+	console.log('props: ', props)
 	const [events, setEvents] = useState<Event[]>([])
 	const [loading, setLoading] = useState(true)
+	const [loadingMore, setLoadingMore] = useState(false)
 	const [error, setError] = useState<string | null>(null)
+	const [currentYear, setCurrentYear] = useState(() => {
+		// Start from the most recent June 1st
+		const now = new Date()
+		const currentMonth = now.getMonth() // 0-based
+		const currentYearNum = now.getFullYear()
 
-	useEffect(() => {
-		const fetchGoogleCalendarEvents = async () => {
-			try {
-				// For now, using mock data until Google Calendar API is set up
-				// TODO: Replace with actual Google Calendar API call
-				const mockEvents: Event[] = [
-					{
-						id: '1',
-						title: 'La Traviata Performance',
-						start: '2025-07-15T19:30:00',
-						end: '2025-07-15T22:00:00',
-						description:
-							"Evening performance of Verdi's La Traviata at the Metropolitan Opera House.",
-						location: 'Metropolitan Opera House, New York',
-						url: 'https://tickets.example.com/la-traviata',
-						featured: true,
-					},
-					{
-						id: '2',
-						title: 'Masterclass: Vocal Techniques',
-						start: '2025-06-20T14:00:00',
-						end: '2025-06-20T16:00:00',
-						description:
-							'Interactive masterclass focusing on advanced vocal techniques for opera singers.',
-						location: 'Juilliard School, New York',
-					},
-					{
-						id: '3',
-						title: 'Recital: Italian Art Songs',
-						start: '2025-08-10T20:00:00',
-						end: '2025-08-10T21:30:00',
-						description: 'An intimate evening of Italian art songs and arias.',
-						location: 'Carnegie Hall, New York',
-						url: 'https://tickets.example.com/recital',
-					},
-					{
-						id: '4',
-						title: 'La Bohème Rehearsal',
-						start: '2025-06-05T10:00:00',
-						end: '2025-06-05T13:00:00',
-						description: 'Final dress rehearsal before opening night.',
-						location: 'Opera House Studio A',
-					},
-				]
+		// If we're before June, use previous year's June
+		return currentMonth < 5 ? currentYearNum - 1 : currentYearNum
+	})
+	const [hasMoreEvents, setHasMoreEvents] = useState(true)
+	const [allLoadedYears, setAllLoadedYears] = useState<number[]>([])
 
-				// Filter events based on props
-				const now = new Date()
-				let filteredEvents = mockEvents
+	// Generate comprehensive mock data for multiple years
+	const generateMockEvents = (year: number): Event[] => {
+		const events: Event[] = [
+			{
+				id: `${year}-la-traviata`,
+				title: 'La Traviata Performance',
+				start: `${year}-07-15T19:30:00`,
+				end: `${year}-07-15T22:00:00`,
+				description: `Evening performance of Verdi's La Traviata at the Metropolitan Opera House.`,
+				location: 'Metropolitan Opera House, New York',
+				url: 'https://tickets.example.com/la-traviata',
+				featured: true,
+			},
+			{
+				id: `${year}-masterclass`,
+				title: 'Masterclass: Vocal Techniques',
+				start: `${year}-06-20T14:00:00`,
+				end: `${year}-06-20T16:00:00`,
+				description:
+					'Interactive masterclass focusing on advanced vocal techniques for opera singers.',
+				location: 'Juilliard School, New York',
+			},
+			{
+				id: `${year}-recital`,
+				title: 'Recital: Italian Art Songs',
+				start: `${year}-08-10T20:00:00`,
+				end: `${year}-08-10T21:30:00`,
+				description: 'An intimate evening of Italian art songs and arias.',
+				location: 'Carnegie Hall, New York',
+				url: 'https://tickets.example.com/recital',
+			},
+			{
+				id: `${year}-boheme`,
+				title: 'La Bohème Performance',
+				start: `${year}-09-05T19:00:00`,
+				end: `${year}-09-05T22:30:00`,
+				description: "Opening night of Puccini's beloved La Bohème.",
+				location: 'Lincoln Center, New York',
+				featured: year === new Date().getFullYear(), // Only current year is featured
+			},
+			{
+				id: `${year}-workshop`,
+				title: 'Young Artists Workshop',
+				start: `${year}-10-12T10:00:00`,
+				end: `${year}-10-12T17:00:00`,
+				description: 'Full-day workshop for emerging opera singers.',
+				location: 'Metropolitan Opera Studio',
+			},
+			{
+				id: `${year}-gala`,
+				title: 'Annual Opera Gala',
+				start: `${year}-11-30T18:00:00`,
+				end: `${year}-11-30T23:00:00`,
+				description: 'Elegant evening gala featuring opera highlights and dinner.',
+				location: 'Grand Ballroom, Plaza Hotel',
+				url: 'https://tickets.example.com/gala',
+				featured: true,
+			},
+			{
+				id: `${year}-holiday`,
+				title: 'Holiday Concert',
+				start: `${year}-12-15T19:30:00`,
+				end: `${year}-12-15T21:00:00`,
+				description: 'Festive holiday concert featuring seasonal classics.',
+				location: "St. Patrick's Cathedral, New York",
+			},
+			{
+				id: `${year + 1}-winter`,
+				title: 'Winter Showcase',
+				start: `${year + 1}-01-20T20:00:00`,
+				end: `${year + 1}-01-20T22:00:00`,
+				description: 'Winter showcase featuring student performances.',
+				location: 'Juilliard School, New York',
+			},
+			{
+				id: `${year + 1}-valentine`,
+				title: "Valentine's Day Special",
+				start: `${year + 1}-02-14T19:00:00`,
+				end: `${year + 1}-02-14T21:30:00`,
+				description: 'Romantic evening of love songs and duets.',
+				location: 'Lincoln Center, New York',
+				featured: true,
+			},
+			{
+				id: `${year + 1}-spring`,
+				title: 'Spring Recital',
+				start: `${year + 1}-04-22T15:00:00`,
+				end: `${year + 1}-04-22T17:00:00`,
+				description: 'Afternoon recital celebrating the arrival of spring.',
+				location: 'Carnegie Hall, New York',
+			},
+			{
+				id: `${year + 1}-finale`,
+				title: 'Season Finale Gala',
+				start: `${year + 1}-05-28T18:30:00`,
+				end: `${year + 1}-05-28T23:30:00`,
+				description: 'Grand finale celebration of the opera season.',
+				location: 'Metropolitan Opera House, New York',
+				url: 'https://tickets.example.com/finale',
+				featured: true,
+			},
+		]
 
-				if (showUpcomingOnly && !showPastEvents) {
-					filteredEvents = mockEvents.filter((event) =>
-						event.start ? new Date(event.start) > now : true
-					)
-				} else if (showPastEvents && !showUpcomingOnly) {
-					filteredEvents = mockEvents.filter((event) =>
-						event.start ? new Date(event.start) < now : true
-					)
-				}
+		// Don't include events from before 2020 (simulate no historical data)
+		return year >= 2020 ? events : []
+	}
 
-				// Sort events - featured first, then by date
-				filteredEvents.sort((a, b) => {
-					if (a.featured && !b.featured) return -1
-					if (!a.featured && b.featured) return 1
+	const fetchEventsForYear = async (year: number): Promise<Event[]> => {
+		try {
+			// Simulate API delay
+			await new Promise((resolve) => setTimeout(resolve, 500))
 
-					if (a.start && b.start) {
-						return new Date(a.start).getTime() - new Date(b.start).getTime()
-					}
-					return 0
-				})
+			// For mock data - in real implementation, this would be Google Calendar API
+			const yearEvents = generateMockEvents(year)
 
-				// Limit results
-				filteredEvents = filteredEvents.slice(0, maxItems)
+			/* 
+      TODO: Replace with actual Google Calendar API call:
+      
+      const startDate = new Date(year, 5, 1) // June 1st of the year
+      const endDate = new Date(year + 1, 4, 31) // May 31st of next year
+      
+      const response = await fetch(
+        `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?` +
+        new URLSearchParams({
+          key: process.env.REACT_APP_GOOGLE_CALENDAR_API_KEY,
+          timeMin: startDate.toISOString(),
+          timeMax: endDate.toISOString(),
+          maxResults: '50',
+          singleEvents: 'true',
+          orderBy: 'startTime'
+        })
+      )
+      
+      const data = await response.json()
+      
+      const googleEvents: Event[] = data.items?.map((item: any) => ({
+        id: item.id,
+        title: item.summary,
+        start: item.start?.dateTime || item.start?.date,
+        end: item.end?.dateTime || item.end?.date,
+        description: item.description,
+        location: item.location,
+        url: item.htmlLink,
+        featured: item.description?.includes('[FEATURED]')
+      })) || []
+      
+      return googleEvents
+      */
 
-				setEvents(filteredEvents)
+			return yearEvents
+		} catch (err) {
+			console.error(`Error fetching events for ${year}:`, err)
+			return []
+		}
+	}
 
-				/* 
-        TODO: Replace mock data with actual Google Calendar API call:
-        
-        const response = await fetch(
-          `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?` +
-          new URLSearchParams({
-            key: process.env.REACT_APP_GOOGLE_CALENDAR_API_KEY,
-            timeMin: showUpcomingOnly ? new Date().toISOString() : undefined,
-            timeMax: showPastEvents ? new Date().toISOString() : undefined,
-            maxResults: maxItems.toString(),
-            singleEvents: 'true',
-            orderBy: 'startTime'
-          })
-        )
-        
-        const data = await response.json()
-        
-        const googleEvents: Event[] = data.items?.map((item: any) => ({
-          id: item.id,
-          title: item.summary,
-          start: item.start?.dateTime || item.start?.date,
-          end: item.end?.dateTime || item.end?.date,
-          description: item.description,
-          location: item.location,
-          url: item.htmlLink,
-          featured: item.description?.includes('[FEATURED]') // or however you mark featured events
-        })) || []
-        
-        setEvents(googleEvents)
-        */
-			} catch (err) {
-				console.error('Error fetching calendar events:', err)
-				setError('Failed to load events from calendar')
-			} finally {
-				setLoading(false)
-			}
+	const loadEvents = async (year: number, append = false) => {
+		if (append) {
+			setLoadingMore(true)
+		} else {
+			setLoading(true)
 		}
 
-		fetchGoogleCalendarEvents()
-	}, [maxItems, showUpcomingOnly, showPastEvents, calendarId])
+		try {
+			const yearEvents = await fetchEventsForYear(year)
 
-	if (loading) return <div>Loading events from calendar...</div>
+			if (append) {
+				setEvents((prev) => [...prev, ...yearEvents])
+				setAllLoadedYears((prev) => [...prev, year])
+			} else {
+				setEvents(yearEvents)
+				setAllLoadedYears([year])
+			}
+
+			// Check if there are more events available (simulate checking previous years)
+			const hasMoreData = year > 2020 // Simulate data availability from 2020
+			setHasMoreEvents(hasMoreData)
+		} catch (err) {
+			setError('Failed to load events')
+		} finally {
+			setLoading(false)
+			setLoadingMore(false)
+		}
+	}
+
+	const loadMoreEvents = async () => {
+		const nextYear = currentYear - allLoadedYears.length
+		if (nextYear >= 2020) {
+			// Don't go before 2020
+			await loadEvents(nextYear, true)
+		}
+	}
+
+	useEffect(() => {
+		loadEvents(currentYear)
+	}, [currentYear, calendarId])
+
+	if (loading) return <div>Loading events...</div>
 
 	if (error) {
 		return (
@@ -152,10 +243,21 @@ const EventsComponent: React.FC<CustomComponentProps> = ({
 	if (events.length === 0) {
 		return (
 			<div className='cta-section'>
-				<p>No events scheduled at this time.</p>
+				<p>No events available at this time.</p>
 			</div>
 		)
 	}
+
+	// Sort events by date (most recent first)
+	const sortedEvents = [...events].sort((a, b) => {
+		if (a.start && b.start) {
+			return new Date(b.start).getTime() - new Date(a.start).getTime()
+		}
+		return 0
+	})
+
+	// Show only 3 events in preview mode
+	const displayEvents = props.preview ? sortedEvents.slice(0, 3) : sortedEvents
 
 	return (
 		<div className='events-component'>
@@ -167,7 +269,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({
 					gap: '1.5rem',
 				}}
 			>
-				{events.map((event) => (
+				{displayEvents.map((event) => (
 					<div
 						key={event.id}
 						className={`event-item ${event.featured ? 'featured' : ''}`}
@@ -282,6 +384,48 @@ const EventsComponent: React.FC<CustomComponentProps> = ({
 				))}
 			</div>
 
+			{/* Action buttons */}
+			<div
+				style={{
+					display: 'flex',
+					gap: '1rem',
+					justifyContent: 'center',
+					marginTop: '2rem',
+					flexWrap: 'wrap',
+				}}
+			>
+				{props.preview ? (
+					<a
+						href={eventsPageUrl}
+						className='cta-button'
+						style={{
+							background: 'var(--primary)',
+							textDecoration: 'none',
+						}}
+					>
+						View All Events
+					</a>
+				) : (
+					hasMoreEvents && (
+						<button
+							onClick={loadMoreEvents}
+							disabled={loadingMore}
+							className='cta-button'
+							style={{
+								background: loadingMore ? 'var(--secondary)' : 'var(--primary)',
+								border: 'none',
+								cursor: loadingMore ? 'not-allowed' : 'pointer',
+								opacity: loadingMore ? 0.7 : 1,
+							}}
+						>
+							{loadingMore
+								? 'Loading...'
+								: `Load Previous Year (${currentYear - allLoadedYears.length})`}
+						</button>
+					)
+				)}
+			</div>
+
 			<div
 				style={{
 					marginTop: '1rem',
@@ -290,7 +434,9 @@ const EventsComponent: React.FC<CustomComponentProps> = ({
 					textAlign: 'center',
 				}}
 			>
-				Events synced from Google Calendar
+				{props.preview
+					? `Showing ${displayEvents.length} recent events`
+					: `Showing events from ${allLoadedYears.length} year${allLoadedYears.length !== 1 ? 's' : ''} • Events synced from Google Calendar`}
 			</div>
 		</div>
 	)
