@@ -1,0 +1,47 @@
+:root {
+	/* Define base colors in RGB format */
+	--primary-rgb: 100, 9, 26; /* Your red color */
+	--secondary-rgb: 194, 174, 145; /* Your beige color */
+	--accent-rgb: 155, 198, 145; /* Your green color */
+	--dark-rgb: 33, 33, 33;
+	--light-rgb: 255, 255, 255;
+
+	/* Define solid colors using rgb() */
+	--primary: rgb(var(--primary-rgb));
+	--secondary: rgb(var(--secondary-rgb));
+	--accent: rgb(var(--accent-rgb));
+	--dark: rgb(var(--dark-rgb));
+	--light: rgb(var(--light-rgb));
+
+	/* Example usage with different opacities */
+	--primary-10: rgba(var(--primary-rgb), 0.1);
+	--primary-25: rgba(var(--primary-rgb), 0.25);
+	--primary-50: rgba(var(--primary-rgb), 0.5);
+	--primary-75: rgba(var(--primary-rgb), 0.75);
+
+	--secondary-10: rgba(var(--secondary-rgb), 0.1);
+	--secondary-25: rgba(var(--secondary-rgb), 0.25);
+	--secondary-50: rgba(var(--secondary-rgb), 0.5);
+	--secondary-75: rgba(var(--secondary-rgb), 0.75);
+
+	--accent-10: rgba(var(--accent-rgb), 0.1);
+	--accent-25: rgba(var(--accent-rgb), 0.25);
+	--accent-50: rgba(var(--accent-rgb), 0.5);
+	--accent-75: rgba(var(--accent-rgb), 0.75);
+}
+
+/* Usage examples */
+.overlay {
+	background: var(--primary-50); /* 50% opacity primary color */
+}
+
+.hover-effect:hover {
+	background: var(--accent-25); /* 25% opacity accent color */
+}
+
+/* Dynamic opacity example - use directly in styles */
+.custom-opacity {
+	/* Use rgba() directly with the RGB values for custom opacity */
+	background: rgba(var(--primary-rgb), 0.33);
+	border-color: rgba(var(--accent-rgb), 0.67);
+}

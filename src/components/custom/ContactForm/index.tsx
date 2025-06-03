@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { CustomComponentProps } from '../../../utils/customPageComponents'
+import Button from '../../blocks/Button'
 
 const ContactForm: React.FC<CustomComponentProps> = () => {
 	const [formData, setFormData] = useState({
@@ -83,9 +84,16 @@ const ContactForm: React.FC<CustomComponentProps> = () => {
 							}}
 						/>
 					</div>
-					<button type='submit' className='cta-button'>
-						Send Message
-					</button>
+					<Button
+						block={{
+							_type: 'button',
+							text: 'Send Message',
+							url: '#',
+							buttonType: 'contained',
+							colorScheme: 'primary',
+							size: 'medium',
+						}}
+					/>
 				</form>
 			</div>
 		</div>

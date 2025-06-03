@@ -1,6 +1,8 @@
 import React from 'react'
 import { PortableText } from '@portabletext/react'
 import { portableTextComponents } from '../../../utils/portableTextComponents'
+import './BlockBanner.css'
+import Button from '../Button'
 
 interface BlockBannerProps {
 	block: {
@@ -12,16 +14,35 @@ interface BlockBannerProps {
 			content: any[]
 		}
 		button?: {
-			url: string
-			text: string
+			_type: 'reference'
+			_ref: string
+			_key?: string
+		} & {
+			title?: string
+			text?: string
+			url?: string
+			buttonType?: 'contained' | 'outlined' | 'text'
+			colorScheme?: 'primary' | 'secondary' | 'accent'
+			width?: 'stretch' | 'fit'
+			size?: 'small' | 'medium' | 'large'
+			customStyles?: {
+				backgroundColor?: { hex: string }
+				textColor?: { hex: string }
+			}
 			openInNewTab?: boolean
+			ariaLabel?: string
 		}
 	}
 }
 
 const BlockBanner: React.FC<BlockBannerProps> = ({ block }) => {
+	console.log(block)
 	return (
-		<div key={block._key || block._id} className='cta-section'>
+		<div
+			key={block._key || block._id}
+			className='block-banner'
+			data-page={block.title?.toLowerCase()}
+		>
 			{block.text?.content && (
 				<div className='rich-text'>
 					<PortableText
@@ -31,14 +52,13 @@ const BlockBanner: React.FC<BlockBannerProps> = ({ block }) => {
 				</div>
 			)}
 			{block.button && (
-				<a
-					href={block.button.url}
-					className='cta-button'
-					target={block.button.openInNewTab ? '_blank' : '_self'}
-					rel={block.button.openInNewTab ? 'noopener noreferrer' : undefined}
-				>
-					{block.button.text}
-				</a>
+				<Button
+					block={{
+						...(block.button as any),
+						buttonType: block.button.buttonType || 'contained',
+						colorScheme: block.button.colorScheme || 'primary',
+					}}
+				/>
 			)}
 		</div>
 	)

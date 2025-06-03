@@ -1,0 +1,105 @@
+/* Block Banner Styles - Call to Action Section */
+.block-banner {
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+	background: var(--bg-gray);
+	padding: var(--spacing-2xl);
+	border-radius: var(--radius-lg);
+	text-align: center;
+	border: 1px solid var(--bg-gray-light);
+	position: relative;
+	overflow: hidden;
+}
+
+.block-banner[data-page='home banner'] {
+	margin-top: -26%;
+}
+
+.block-banner-title {
+	font-family: var(--font-family-headings);
+	font-size: var(--font-size-2xl);
+	color: var(--primary);
+	margin-bottom: var(--spacing-lg);
+	font-weight: var(--font-weight-semibold);
+}
+
+.block-banner-content {
+	font-family: var(--font-family-serif);
+	font-size: var(--font-size-lg);
+	line-height: var(--line-height-relaxed);
+	color: var(--text-dark);
+	margin-bottom: var(--spacing-xl);
+	max-width: 600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+
+.block-banner-content p {
+	margin-bottom: var(--spacing-md);
+}
+
+.block-banner-content p:last-child {
+	margin-bottom: 0;
+}
+
+.block-banner.primary .block-banner-title {
+	color: var(--text-white);
+}
+
+.block-banner.primary .block-banner-content {
+	color: rgba(255, 255, 255, 0.9);
+}
+
+/* Quote-style banner */
+.block-banner.quote {
+	background: var(--secondary);
+	border-left: 6px solid var(--primary);
+	text-align: left;
+	position: relative;
+}
+
+.block-banner.quote::before {
+	content: '"';
+	position: absolute;
+	top: var(--spacing-lg);
+	left: var(--spacing-lg);
+	font-size: 4rem;
+	color: var(--primary);
+	font-family: var(--font-family-headings);
+	line-height: 1;
+	opacity: 0.3;
+}
+
+.block-banner.quote .block-banner-content {
+	font-style: italic;
+	padding-left: var(--spacing-xl);
+	text-align: left;
+	margin-left: 0;
+	margin-right: 0;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	.block-banner {
+		padding: var(--spacing-xl) var(--spacing-lg);
+		margin: var(--spacing-xl) 0;
+	}
+
+	.block-banner-title {
+		font-size: var(--font-size-xl);
+		margin-bottom: var(--spacing-md);
+	}
+
+	.block-banner-content {
+		font-size: var(--font-size-base);
+		margin-bottom: var(--spacing-lg);
+	}
+}
+
+@media (max-width: 480px) {
+	.block-banner {
+		padding: var(--spacing-lg);
+		border-radius: var(--radius-md);
+	}
+}

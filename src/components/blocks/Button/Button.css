@@ -1,0 +1,137 @@
+/* Base button styles */
+.button-section {
+	display: inline-block;
+}
+
+.button-link {
+	text-decoration: none;
+	display: inline-block;
+}
+
+.button-link.stretch {
+	width: 100%;
+}
+
+.button-element {
+	cursor: pointer;
+	border: none;
+	font-family: var(--font-family);
+	font-weight: 600;
+	transition: all 0.2s ease-in-out;
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+}
+
+/* Size variants */
+.button-element.small {
+	padding: 0.5rem 1rem;
+	font-size: 0.875rem;
+	border-radius: 6px;
+}
+
+.button-element.medium {
+	padding: 0.75rem 1.5rem;
+	font-size: 1rem;
+	border-radius: 8px;
+}
+
+.button-element.large {
+	padding: 1rem 2rem;
+	font-size: 1.125rem;
+	border-radius: 10px;
+}
+
+/* Contained buttons (default) */
+.button-section.contained .button-element {
+	background-color: var(--button-bg, var(--primary));
+	color: var(--button-text, white);
+}
+
+.button-section.contained .button-element:hover {
+	filter: brightness(1.1);
+}
+
+.button-section.contained .button-element:active {
+	filter: brightness(0.9);
+}
+
+/* Outlined buttons */
+.button-section.outlined .button-element {
+	background-color: transparent;
+	border: 2px solid var(--button-bg, var(--primary));
+	color: var(--button-bg, var(--primary));
+}
+
+.button-section.outlined .button-element:hover {
+	background-color: rgba(var(--button-bg-rgb, var(--primary-rgb)), 0.1);
+}
+
+.button-section.outlined .button-element:active {
+	background-color: rgba(var(--button-bg-rgb, var(--primary-rgb)), 0.2);
+}
+
+/* Text buttons */
+.button-section.text .button-element {
+	background-color: transparent;
+	color: var(--button-bg, var(--primary));
+	padding-left: 0.75rem;
+	padding-right: 0.75rem;
+}
+
+.button-section.text .button-element:hover {
+	background-color: rgba(var(--button-bg-rgb, var(--primary-rgb)), 0.1);
+}
+
+.button-section.text .button-element:active {
+	background-color: rgba(var(--button-bg-rgb, var(--primary-rgb)), 0.2);
+}
+
+/* Color schemes */
+.button-section.primary {
+	--button-bg: var(--primary);
+	--button-bg-rgb: var(--primary-rgb);
+	--button-text: white;
+}
+
+.button-section.secondary {
+	--button-bg: var(--secondary);
+	--button-bg-rgb: var(--secondary-rgb);
+	--button-text: white;
+}
+
+.button-section.accent {
+	--button-bg: var(--accent);
+	--button-bg-rgb: var(--accent-rgb);
+	--button-text: var(--dark);
+}
+
+/* Hover states */
+.button-section.primary .button-link:hover .button-element {
+	opacity: 0.9;
+}
+
+.button-section.secondary.primary .button-link:hover .button-element {
+	background-color: rgba(var(--primary-rgb), 0.08);
+}
+
+.button-section.secondary.accent .button-link:hover .button-element {
+	background-color: rgba(var(--accent-rgb), 0.08);
+}
+
+.button-section.secondary.secondary .button-link:hover .button-element {
+	background-color: rgba(var(--secondary-rgb), 0.08);
+}
+
+.button-section.tertiary .button-link:hover .button-element {
+	text-decoration: underline;
+	opacity: 0.85;
+}
+
+/* Focus states */
+.button-section .button-element:focus-visible {
+	box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.3);
+	outline: none;
+}

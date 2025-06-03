@@ -8,6 +8,15 @@
 	--secondary: #c2ae91;
 	--accent: #9bc691;
 
+	/* RGB values for opacity usage */
+	--primary-rgb: 100, 9, 26;
+	--secondary-rgb: 194, 174, 145;
+	--accent-rgb: 155, 198, 145;
+	--bg-dark-rgb: 40, 4, 11;
+	--bg-light-rgb: 245, 245, 238;
+	--bg-gray-rgb: 234, 235, 239;
+	--bg-gray-light-rgb: 229, 226, 226;
+
 	/* Background Colors */
 	--bg-dark: #28040b;
 	--bg-light: #f5f5ee;
@@ -105,7 +114,7 @@ body {
 	font-size: var(--font-size-base);
 	font-weight: var(--font-weight-normal);
 	line-height: var(--line-height-normal);
-	color: var(--text-primary);
+	color: var(--text-dark);
 	background-color: var(--bg-light);
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
@@ -120,7 +129,6 @@ h4,
 h5,
 h6 {
 	font-family: var(--font-family-headings);
-	color: var(--primary);
 	font-weight: var(--font-weight-semibold);
 	line-height: var(--line-height-tight);
 	margin-bottom: var(--spacing-md);

@@ -5,6 +5,7 @@ import ContactForm from '../components/custom/ContactForm'
 import Events from '../components/custom/Events'
 
 export interface CustomComponentProps {
+	title?: string
 	[key: string]: any
 }
 

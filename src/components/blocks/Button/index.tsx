@@ -1,4 +1,5 @@
 import React from 'react'
+import './Button.css'
 
 interface ButtonProps {
 	block: {
@@ -7,8 +8,8 @@ interface ButtonProps {
 		_type: 'button'
 		text: string
 		url: string
-		buttonType?: string
-		colorScheme?: string
+		buttonType?: 'contained' | 'outlined' | 'text'
+		colorScheme?: 'primary' | 'secondary' | 'accent'
 		width?: 'stretch' | 'fit'
 		size?: 'small' | 'medium' | 'large'
 		customStyles?: {
@@ -21,37 +22,39 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ block }) => {
+	// Only keep custom styles that can't be handled by CSS classes
+	const getCustomStyles = () => {
+		const styles: React.CSSProperties = {}
+
+		if (block.customStyles?.backgroundColor) {
+			styles.backgroundColor = block.customStyles.backgroundColor.hex
+		}
+		if (block.customStyles?.textColor) {
+			styles.color = block.customStyles.textColor.hex
+		}
+
+		return styles
+	}
+
 	return (
 		<div
 			key={block._key || block._id}
-			className='button-section'
-			style={{ margin: '2rem 0', textAlign: 'center' }}
+			className={`button-section ${block.buttonType || 'contained'} ${block.colorScheme || 'primary'}`}
 		>
 			<a
 				href={block.url}
-				className='cta-button'
 				target={block.openInNewTab ? '_blank' : '_self'}
 				rel={block.openInNewTab ? 'noopener noreferrer' : undefined}
-				aria-label={block.ariaLabel}
-				style={{
-					backgroundColor: block.customStyles?.backgroundColor?.hex || undefined,
-					color: block.customStyles?.textColor?.hex || undefined,
-					width: block.width === 'stretch' ? '100%' : 'auto',
-					fontSize:
-						block.size === 'small'
-							? '0.875rem'
-							: block.size === 'large'
-								? '1.125rem'
-								: '1rem',
-					padding:
-						block.size === 'small'
-							? '0.5rem 1rem'
-							: block.size === 'large'
-								? '1rem 2rem'
-								: '0.75rem 1.5rem',
-				}}
+				className={`button-link ${block.width === 'stretch' ? 'stretch' : ''}`}
 			>
-				{block.text}
+				<button
+					className={`button-element ${block.size || 'medium'}`}
+					aria-label={block.ariaLabel}
+					style={getCustomStyles()}
+					type='button'
+				>
+					{block.text}
+				</button>
 			</a>
 		</div>
 	)

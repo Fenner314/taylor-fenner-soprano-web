@@ -3,6 +3,8 @@ import { useParams } from 'react-router-dom'
 import { client } from '../../lib/sanity'
 import { getCustomPageComponent } from '../../utils/customPageComponents'
 import renderBlock from '../../utils/renderBlock'
+import './DynamicPage.css'
+import Title from '../../components/custom/Title'
 
 interface PageData {
 	_id: string
@@ -84,8 +86,10 @@ const DynamicPage: React.FC = () => {
 		: null
 
 	return (
-		<div className='page-container'>
-			<h1 className='page-title'>{pageData.title !== 'Home' && pageData.title}</h1>
+		<div className='page-container' data-page={pageData.title?.toLowerCase()}>
+			{pageData.title !== 'Home' && pageData.title && (
+				<Title>{pageData.title}</Title>
+			)}
 
 			{/* Sanity page builder content */}
 			{pageData.content && pageData.content.length > 0 && (

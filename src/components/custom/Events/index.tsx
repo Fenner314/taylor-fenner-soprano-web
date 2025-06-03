@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { CustomComponentProps } from '../../../utils/customPageComponents'
+import './Events.css'
+import Title from '../Title'
+import Button from '../../blocks/Button'
+import calendarIcon from '../../../assets/icons/calendar.png'
+import pinIcon from '../../../assets/icons/pin.png'
 
 interface Event {
 	id: string
@@ -15,8 +20,7 @@ interface Event {
 const calendarId = 'primary'
 const eventsPageUrl = '/events'
 
-const EventsComponent: React.FC<CustomComponentProps> = (props) => {
-	console.log('props: ', props)
+const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 	const [events, setEvents] = useState<Event[]>([])
 	const [loading, setLoading] = useState(true)
 	const [loadingMore, setLoadingMore] = useState(false)
@@ -44,7 +48,7 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 				description: `Evening performance of Verdi's La Traviata at the Metropolitan Opera House.`,
 				location: 'Metropolitan Opera House, New York',
 				url: 'https://tickets.example.com/la-traviata',
-				featured: true,
+				// featured: true,
 			},
 			{
 				id: `${year}-masterclass`,
@@ -71,7 +75,7 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 				end: `${year}-09-05T22:30:00`,
 				description: "Opening night of Puccini's beloved La Bohème.",
 				location: 'Lincoln Center, New York',
-				featured: year === new Date().getFullYear(), // Only current year is featured
+				// featured: year === new Date().getFullYear(), // Only current year is featured
 			},
 			{
 				id: `${year}-workshop`,
@@ -89,7 +93,7 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 				description: 'Elegant evening gala featuring opera highlights and dinner.',
 				location: 'Grand Ballroom, Plaza Hotel',
 				url: 'https://tickets.example.com/gala',
-				featured: true,
+				// featured: true,
 			},
 			{
 				id: `${year}-holiday`,
@@ -114,7 +118,7 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 				end: `${year + 1}-02-14T21:30:00`,
 				description: 'Romantic evening of love songs and duets.',
 				location: 'Lincoln Center, New York',
-				featured: true,
+				// featured: true,
 			},
 			{
 				id: `${year + 1}-spring`,
@@ -132,7 +136,7 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 				description: 'Grand finale celebration of the opera season.',
 				location: 'Metropolitan Opera House, New York',
 				url: 'https://tickets.example.com/finale',
-				featured: true,
+				// featured: true,
 			},
 		]
 
@@ -248,19 +252,31 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 		)
 	}
 
-	// Sort events by date (most recent first)
+	// Sort events by date (soonest first)
 	const sortedEvents = [...events].sort((a, b) => {
 		if (a.start && b.start) {
-			return new Date(b.start).getTime() - new Date(a.start).getTime()
+			return new Date(a.start).getTime() - new Date(b.start).getTime()
 		}
 		return 0
 	})
 
-	// Show only 3 events in preview mode
-	const displayEvents = props.preview ? sortedEvents.slice(0, 3) : sortedEvents
+	// Filter for only upcoming events
+	const now = new Date()
+	const upcomingEvents = sortedEvents.filter((event) => {
+		if (!event.start) return false
+		return new Date(event.start) >= now
+	})
+
+	// Show only 3 upcoming events in preview mode
+	const displayEvents = props.preview ? upcomingEvents.slice(0, 3) : sortedEvents
 
 	return (
 		<div className='events-component'>
+			{props.preview && (
+				<h2 className='events-title'>
+					<Title>Upcoming Events</Title>
+				</h2>
+			)}
 			<div
 				className='events-grid'
 				style={{
@@ -305,7 +321,7 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 						<h3
 							className='media-title'
 							style={{
-								color: event.featured ? 'var(--dark)' : 'var(--primary)',
+								color: event.featured ? 'var(--accent)' : 'var(--text-dark)',
 								marginBottom: '0.75rem',
 							}}
 						>
@@ -319,9 +335,20 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 									fontWeight: '600',
 									marginBottom: '0.5rem',
 									fontSize: '1rem',
+									display: 'flex',
+									alignItems: 'center',
+									gap: '0.5rem',
 								}}
 							>
-								📅{' '}
+								<img
+									src={calendarIcon}
+									alt='Calendar'
+									style={{
+										width: '16px',
+										height: '16px',
+										objectFit: 'contain',
+									}}
+								/>{' '}
 								{new Date(event.start).toLocaleDateString('en-US', {
 									weekday: 'long',
 									year: 'numeric',
@@ -347,9 +374,23 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 								style={{
 									marginBottom: '0.75rem',
 									color: event.featured ? 'var(--dark)' : 'var(--dark)',
+									display: 'flex',
+									alignItems: 'center',
+									gap: '0.5rem',
 								}}
 							>
-								<strong>📍 Location:</strong> {event.location}
+								<img
+									src={pinIcon}
+									alt='Location'
+									style={{
+										width: '16px',
+										height: '16px',
+										objectFit: 'contain',
+									}}
+								/>
+								<span>
+									<strong>Location:</strong> {event.location}
+								</span>
 							</p>
 						)}
 
@@ -366,19 +407,17 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 						)}
 
 						{event.url && (
-							<a
-								href={event.url}
-								className='cta-button'
-								target='_blank'
-								rel='noopener noreferrer'
-								style={{
-									display: 'inline-block',
-									marginTop: '0.5rem',
-									background: event.featured ? 'var(--primary)' : undefined,
+							<Button
+								block={{
+									_type: 'button',
+									text: 'View Details',
+									url: event.url,
+									buttonType: 'outlined',
+									colorScheme: 'primary',
+									size: 'small',
+									openInNewTab: true,
 								}}
-							>
-								View Details
-							</a>
+							/>
 						)}
 					</div>
 				))}
@@ -395,48 +434,37 @@ const EventsComponent: React.FC<CustomComponentProps> = (props) => {
 				}}
 			>
 				{props.preview ? (
-					<a
-						href={eventsPageUrl}
-						className='cta-button'
-						style={{
-							background: 'var(--primary)',
-							textDecoration: 'none',
+					<Button
+						block={{
+							_type: 'button',
+							text: 'View All Events',
+							url: eventsPageUrl,
+							buttonType: 'text',
+							colorScheme: 'primary',
+							size: 'medium',
 						}}
-					>
-						View All Events
-					</a>
+					/>
 				) : (
 					hasMoreEvents && (
-						<button
-							onClick={loadMoreEvents}
-							disabled={loadingMore}
-							className='cta-button'
-							style={{
-								background: loadingMore ? 'var(--secondary)' : 'var(--primary)',
-								border: 'none',
-								cursor: loadingMore ? 'not-allowed' : 'pointer',
-								opacity: loadingMore ? 0.7 : 1,
+						<Button
+							block={{
+								_type: 'button',
+								text: loadingMore
+									? 'Loading...'
+									: `Load Previous Year (${currentYear - allLoadedYears.length})`,
+								url: '#',
+								buttonType: 'contained',
+								colorScheme: 'primary',
+								size: 'medium',
+								customStyles: loadingMore
+									? {
+											backgroundColor: { hex: 'var(--secondary)' },
+										}
+									: undefined,
 							}}
-						>
-							{loadingMore
-								? 'Loading...'
-								: `Load Previous Year (${currentYear - allLoadedYears.length})`}
-						</button>
+						/>
 					)
 				)}
-			</div>
-
-			<div
-				style={{
-					marginTop: '1rem',
-					fontSize: '0.8rem',
-					color: 'var(--secondary)',
-					textAlign: 'center',
-				}}
-			>
-				{props.preview
-					? `Showing ${displayEvents.length} recent events`
-					: `Showing events from ${allLoadedYears.length} year${allLoadedYears.length !== 1 ? 's' : ''} • Events synced from Google Calendar`}
 			</div>
 		</div>
 	)

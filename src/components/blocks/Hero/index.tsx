@@ -2,6 +2,7 @@ import React from 'react'
 import { PortableText } from '@portabletext/react'
 import { urlForImage } from '../../../lib/sanity'
 import { portableTextComponents } from '../../../utils/portableTextComponents'
+import './Hero.css'
 
 interface HeroProps {
 	block: {
@@ -16,24 +17,15 @@ interface HeroProps {
 
 const Hero: React.FC<HeroProps> = ({ block }) => {
 	return (
-		<div
-			key={block._key || block._id}
-			className='hero-section'
-			style={{ margin: '2rem 0' }}
-		>
+		<div key={block._key || block._id} className='hero-section'>
 			{block.image && (
 				<img
 					src={urlForImage(block.image).url()}
 					alt={block.title || 'Hero image'}
-					style={{
-						width: '100%',
-						height: '300px',
-						objectFit: 'cover',
-						borderRadius: '12px',
-					}}
+					className='hero-image'
 				/>
 			)}
-			{block.text?.title && <h1>{block.text.title}</h1>}
+			{block.text?.title && <h1 className='hero-title'>{block.text.title}</h1>}
 		</div>
 	)
 }

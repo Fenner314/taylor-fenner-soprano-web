@@ -1,0 +1,17 @@
+.title-container {
+	position: relative;
+	text-align: left;
+}
+
+.highlighted-title {
+	margin-bottom: 0;
+}
+
+.underline {
+	width: 100px;
+	height: 12px;
+	background-color: rgba(var(--secondary-rgb), 0.6);
+	position: absolute;
+	bottom: 2px;
+	z-index: -1;
+}

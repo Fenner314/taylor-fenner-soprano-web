@@ -5,7 +5,6 @@ import Banner from '../components/blocks/BlockBanner'
 import Button from '../components/blocks/Button'
 import MediaImage from '../components/blocks/MediaImage'
 import VideoRecording from '../components/blocks/VideoRecording'
-import Event from '../components/blocks/Event'
 import { getCustomPageComponent } from './customPageComponents'
 
 const renderBlock = (block: any) => {
@@ -31,9 +30,6 @@ const renderBlock = (block: any) => {
 		case 'videoRecording':
 			return <VideoRecording key={block._key || block._id} block={block} />
 
-		case 'event':
-			return <Event key={block._key || block._id} block={block} />
-
 		case 'customComponent':
 			const CustomComponent = getCustomPageComponent(block.component)
 			let componentProps = {}
@@ -45,7 +41,11 @@ const renderBlock = (block: any) => {
 				}
 			}
 			return CustomComponent ? (
-				<CustomComponent key={block._key || block._id} {...componentProps} />
+				<CustomComponent
+					key={block._key || block._id}
+					title={block.title}
+					props={componentProps}
+				/>
 			) : null
 
 		default:
