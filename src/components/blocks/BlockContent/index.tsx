@@ -19,7 +19,7 @@ const BlockContent: React.FC<BlockContentProps> = ({ block }) => {
 			className='content-section'
 			style={{ margin: '2rem 0' }}
 		>
-			{block.title && <h2 className='section-title'>{block.title}</h2>}
+			{/* {block.title && <h2 className='section-title'>{block.title}</h2>} */}
 			{block.content && (
 				<div className='rich-text'>
 					<PortableText value={block.content} components={portableTextComponents} />

@@ -1,12 +1,14 @@
 import React from 'react'
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
+import {
+	BrowserRouter as Router,
+	Routes,
+	Route,
+	Link,
+	Navigate,
+} from 'react-router-dom'
 import './App.css'
 
-// Import pages
-import Home from './pages/Home'
-import About from './pages/About'
-import Media from './pages/Media'
-import Contact from './pages/Contact'
+import DynamicPage from './pages/DynamicPage'
 // import Studio from './components/Studio'
 
 function App() {
@@ -31,11 +33,10 @@ function App() {
 				</nav> */}
 
 				<Routes>
-					<Route path='/' element={<Home />} />
-					<Route path='/about' element={<About />} />
-					<Route path='/media' element={<Media />} />
-					<Route path='/contact' element={<Contact />} />
-					{/* <Route path='/admin' element={<Studio />} /> */}
+					<Route path='/' element={<DynamicPage />} />
+					{/* <Route path='/' element={<Navigate to='/' replace />} /> */}
+					<Route path='/:slug' element={<DynamicPage />} />
+					<Route path='*' element={<div className='error'>Page not found</div>} />
 				</Routes>
 			</div>
 		</Router>

@@ -6,6 +6,7 @@ import Button from '../components/blocks/Button'
 import MediaImage from '../components/blocks/MediaImage'
 import VideoRecording from '../components/blocks/VideoRecording'
 import Event from '../components/blocks/Event'
+import { getCustomPageComponent } from './customPageComponents'
 
 const renderBlock = (block: any) => {
 	switch (block._type) {
@@ -32,6 +33,12 @@ const renderBlock = (block: any) => {
 
 		case 'event':
 			return <Event key={block._key || block._id} block={block} />
+
+		case 'customComponent':
+			const CustomComponent = getCustomPageComponent(block.component)
+			return CustomComponent ? (
+				<CustomComponent key={block._key || block._id} />
+			) : null
 
 		default:
 			console.warn(`Unknown block type: ${block._type}`)

@@ -9,7 +9,7 @@ interface HeroProps {
 		_id?: string
 		_type: 'hero'
 		title?: string
-		text?: any[]
+		text?: any
 		image?: any
 	}
 }
@@ -33,12 +33,7 @@ const Hero: React.FC<HeroProps> = ({ block }) => {
 					}}
 				/>
 			)}
-			{block.title && <h1 className='page-title'>{block.title}</h1>}
-			{block.text && (
-				<div className='rich-text'>
-					<PortableText value={block.text} components={portableTextComponents} />
-				</div>
-			)}
+			{block.text?.title && <h1>{block.text.title}</h1>}
 		</div>
 	)
 }
