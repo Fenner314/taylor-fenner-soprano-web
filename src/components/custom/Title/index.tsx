@@ -8,7 +8,7 @@ interface TitleProps {
 const Title: React.FC<TitleProps> = ({ children }) => {
 	return (
 		<div className='title-container'>
-			<h2 className='highlighted-title'>{children}</h2>
+			<h1 className='highlighted-title'>{children}</h1>
 			<div className='underline'></div>
 		</div>
 	)

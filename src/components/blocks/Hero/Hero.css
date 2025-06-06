@@ -14,6 +14,18 @@
 	overflow: hidden;
 }
 
+.hero-section[data-page='home-hero'],
+.hero-section[data-page='about-hero'] {
+	background-color: var(--primary);
+	background: radial-gradient(
+		circle at center,
+		#64091a 0%,
+		#4d0715 40%,
+		#360a10 70%,
+		#1f060b 100%
+	);
+}
+
 .hero-image {
 	position: absolute;
 	top: 0;
@@ -23,6 +35,13 @@
 	object-fit: cover;
 	object-position: center 35%;
 	z-index: 0;
+}
+
+.hero-section[data-page='home-hero'] .hero-image,
+.hero-section[data-page='about-hero'] .hero-image {
+	right: 0;
+	margin: auto;
+	max-width: 800px;
 }
 
 .hero-content {

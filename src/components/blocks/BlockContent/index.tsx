@@ -17,7 +17,7 @@ const BlockContent: React.FC<BlockContentProps> = ({ block }) => {
 		<div
 			key={block._key || block._id}
 			className='content-section'
-			style={{ margin: '2rem 0' }}
+			data-content-type={block.title?.toLowerCase().replace(/\s+/g, '-')}
 		>
 			{/* {block.title && <h2 className='section-title'>{block.title}</h2>} */}
 			{block.content && (

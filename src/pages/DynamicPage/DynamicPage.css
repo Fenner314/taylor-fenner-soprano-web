@@ -4,11 +4,6 @@
 	padding: 0 0.5rem 80px;
 }
 
-/* Add top padding for all pages except home */
-.page-container:not([data-page='home']) {
-	padding-top: 2rem;
-}
-
 .page-title {
 	font-size: var(--font-size-4xl);
 	color: var(--primary);
@@ -28,16 +23,6 @@
 
 .custom-component-wrapper {
 	width: 100%;
-}
-
-.section-title {
-	font-size: var(--font-size-2xl);
-	color: var(--primary);
-	margin-bottom: var(--spacing-lg);
-	font-family: var(--font-family-headings);
-	font-weight: var(--font-weight-semibold);
-	border-bottom: 2px solid var(--accent);
-	padding-bottom: var(--spacing-sm);
 }
 
 .loading {
@@ -61,6 +46,7 @@
 .rich-text {
 	font-family: var(--font-family-serif);
 	line-height: var(--line-height-relaxed);
+	max-width: 105ch;
 }
 
 .rich-text h1,
@@ -118,6 +104,17 @@
 
 .rich-text li {
 	margin-bottom: var(--spacing-sm);
+}
+
+/* Biography specific styling */
+.content-section[data-content-type='biography'] {
+	text-align: left;
+	max-width: 800px;
+	margin: 0 auto;
+}
+
+.content-section[data-content-type='biography'] .rich-text {
+	text-align: left;
 }
 
 /* Responsive adjustments */

@@ -19,9 +19,10 @@ interface ButtonProps {
 		openInNewTab?: boolean
 		ariaLabel?: string
 	}
+	type?: 'button' | 'submit' | 'reset'
 }
 
-const Button: React.FC<ButtonProps> = ({ block }) => {
+const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 	// Only keep custom styles that can't be handled by CSS classes
 	const getCustomStyles = () => {
 		const styles: React.CSSProperties = {}
@@ -36,10 +37,35 @@ const Button: React.FC<ButtonProps> = ({ block }) => {
 		return styles
 	}
 
+	// For submit buttons, we don't want to wrap in an anchor tag
+	if (props.type === 'submit') {
+		return (
+			<div
+				key={block._key || block._id}
+				className={`button-section ${block.buttonType || 'contained'} ${
+					block.colorScheme || 'primary'
+				}`}
+			>
+				<button
+					className={`button-element ${block.size || 'medium'} ${
+						block.width === 'stretch' ? 'stretch' : ''
+					}`}
+					aria-label={block.ariaLabel}
+					style={getCustomStyles()}
+					type={props.type}
+				>
+					{block.text}
+				</button>
+			</div>
+		)
+	}
+
 	return (
 		<div
 			key={block._key || block._id}
-			className={`button-section ${block.buttonType || 'contained'} ${block.colorScheme || 'primary'}`}
+			className={`button-section ${block.buttonType || 'contained'} ${
+				block.colorScheme || 'primary'
+			}`}
 		>
 			<a
 				href={block.url}
@@ -51,7 +77,7 @@ const Button: React.FC<ButtonProps> = ({ block }) => {
 					className={`button-element ${block.size || 'medium'}`}
 					aria-label={block.ariaLabel}
 					style={getCustomStyles()}
-					type='button'
+					type={props.type}
 				>
 					{block.text}
 				</button>

@@ -4,6 +4,7 @@ import Downloads from '../components/blocks/Downloads'
 import Banner from '../components/blocks/BlockBanner'
 import Button from '../components/blocks/Button'
 import MediaImage from '../components/blocks/MediaImage'
+import MediaGrid from '../components/blocks/MediaGrid'
 import VideoRecording from '../components/blocks/VideoRecording'
 import { getCustomPageComponent } from './customPageComponents'
 
@@ -26,6 +27,9 @@ const renderBlock = (block: any) => {
 
 		case 'mediaImage':
 			return <MediaImage key={block._key || block._id} block={block} />
+
+		case 'mediaGrid':
+			return <MediaGrid key={block._key || block._id} block={block} />
 
 		case 'videoRecording':
 			return <VideoRecording key={block._key || block._id} block={block} />

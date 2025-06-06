@@ -1,0 +1,23 @@
+.downloads-section {
+	position: relative;
+	width: 100vw;
+	margin-left: calc(-50vw + 50%);
+	overflow: hidden;
+	background-color: var(--bg-gray);
+	padding: 2rem;
+}
+
+.downloads-grid {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+	gap: 2rem 6rem;
+}
+
+.section-title {
+	margin-bottom: 2rem;
+}
+
+.download-item {
+	cursor: pointer;
+}

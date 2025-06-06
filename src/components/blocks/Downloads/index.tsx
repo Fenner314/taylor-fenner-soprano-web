@@ -1,4 +1,5 @@
 import React from 'react'
+import './Downloads.css'
 
 interface DownloadsProps {
 	block: {
@@ -10,7 +11,8 @@ interface DownloadsProps {
 			_id: string
 			title: string
 			description?: string
-			linkUrl: string
+			link: string
+			filename: string
 		}>
 	}
 }
@@ -23,16 +25,16 @@ const Downloads: React.FC<DownloadsProps> = ({ block }) => {
 				<div className='downloads-grid'>
 					{block.downloads.map((download) => (
 						<div key={download._id} className='download-item'>
-							<h3>
+							<h4>
 								<a
-									href={download.linkUrl}
+									href={download.link}
 									className='download-link'
 									target='_blank'
 									rel='noopener noreferrer'
 								>
 									{download.title}
 								</a>
-							</h3>
+							</h4>
 							{download.description && <p>{download.description}</p>}
 						</div>
 					))}

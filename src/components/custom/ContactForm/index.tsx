@@ -1,19 +1,76 @@
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { CustomComponentProps } from '../../../utils/customPageComponents'
 import Button from '../../blocks/Button'
+import emailjs from '@emailjs/browser'
+import ReCAPTCHA from 'react-google-recaptcha'
+import './ContactForm.css'
 
-const ContactForm: React.FC<CustomComponentProps> = () => {
+interface ContactFormProps extends CustomComponentProps {
+	emailAddress?: string
+}
+
+const ContactForm: React.FC<ContactFormProps> = () => {
 	const [formData, setFormData] = useState({
 		name: '',
 		email: '',
 		message: '',
 	})
+	const [status, setStatus] = useState<{
+		type: 'success' | 'error' | null
+		message: string
+	}>({
+		type: null,
+		message: '',
+	})
+	const [isSubmitting, setIsSubmitting] = useState(false)
+	const recaptchaRef = useRef<ReCAPTCHA>(null)
 
-	const handleSubmit = (e: React.FormEvent) => {
+	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
-		// Handle form submission
-		console.log('Contact form submitted:', formData)
-		// You could integrate with an email service here
+		setIsSubmitting(true)
+		setStatus({ type: null, message: '' })
+
+		try {
+			// Get reCAPTCHA token
+			const token = await recaptchaRef.current?.executeAsync()
+			if (!token) {
+				throw new Error('Please complete the reCAPTCHA verification')
+			}
+
+			await emailjs.send(
+				process.env.REACT_APP_EMAILJS_SERVICE_ID!,
+				process.env.REACT_APP_EMAILJS_TEMPLATE_ID!,
+				{
+					name: formData.name,
+					email: formData.email,
+					message: formData.message,
+					to_name: 'Taylor Fenner',
+					'g-recaptcha-response': token,
+				},
+				process.env.REACT_APP_EMAILJS_PUBLIC_KEY
+			)
+
+			setStatus({
+				type: 'success',
+				message: 'Thank you! Your message has been sent.',
+			})
+			setFormData({ name: '', email: '', message: '' }) // Reset form
+			recaptchaRef.current?.reset() // Reset reCAPTCHA
+		} catch (error) {
+			console.error('Failed to send email:', error)
+			setStatus({
+				type: 'error',
+				message:
+					error instanceof Error
+						? error.message
+						: 'Sorry, something went wrong. Please try again later.',
+			})
+		} finally {
+			setIsSubmitting(false)
+			setTimeout(() => {
+				setStatus({ type: null, message: '' })
+			}, 8000)
+		}
 	}
 
 	const handleChange = (
@@ -26,12 +83,26 @@ const ContactForm: React.FC<CustomComponentProps> = () => {
 	}
 
 	return (
-		<div className='custom-contact-form' style={{ margin: '2rem 0' }}>
+		<div className='custom-contact-form'>
 			<div className='cta-section'>
-				<h3 style={{ color: 'var(--primary)', marginBottom: '1rem' }}>
-					Get in Touch
-				</h3>
-				<form onSubmit={handleSubmit}>
+				<h3>Get in Touch</h3>
+				{status.type && (
+					<div
+						className={`form-message ${status.type}`}
+						style={{
+							padding: '1rem',
+							marginBottom: '1rem',
+							borderRadius: '8px',
+							backgroundColor:
+								status.type === 'success' ? 'var(--bg-success)' : 'var(--bg-error)',
+							color:
+								status.type === 'success' ? 'var(--text-success)' : 'var(--text-error)',
+						}}
+					>
+						{status.message}
+					</div>
+				)}
+				<form onSubmit={handleSubmit} className='contact-form'>
 					<div style={{ marginBottom: '1rem' }}>
 						<input
 							type='text'
@@ -40,13 +111,8 @@ const ContactForm: React.FC<CustomComponentProps> = () => {
 							value={formData.name}
 							onChange={handleChange}
 							required
-							style={{
-								width: '100%',
-								padding: '0.75rem',
-								border: '1px solid var(--bg-gray-2)',
-								borderRadius: '8px',
-								fontSize: '1rem',
-							}}
+							className='contact-form-input font-serif'
+							disabled={isSubmitting}
 						/>
 					</div>
 					<div style={{ marginBottom: '1rem' }}>
@@ -57,13 +123,8 @@ const ContactForm: React.FC<CustomComponentProps> = () => {
 							value={formData.email}
 							onChange={handleChange}
 							required
-							style={{
-								width: '100%',
-								padding: '0.75rem',
-								border: '1px solid var(--bg-gray-2)',
-								borderRadius: '8px',
-								fontSize: '1rem',
-							}}
+							className='contact-form-input font-serif'
+							disabled={isSubmitting}
 						/>
 					</div>
 					<div style={{ marginBottom: '1rem' }}>
@@ -74,25 +135,27 @@ const ContactForm: React.FC<CustomComponentProps> = () => {
 							onChange={handleChange}
 							required
 							rows={4}
-							style={{
-								width: '100%',
-								padding: '0.75rem',
-								border: '1px solid var(--bg-gray-2)',
-								borderRadius: '8px',
-								fontSize: '1rem',
-								resize: 'vertical',
-							}}
+							className='contact-form-textarea font-serif'
+							disabled={isSubmitting}
+						/>
+					</div>
+					<div style={{ marginBottom: '1rem' }}>
+						<ReCAPTCHA
+							ref={recaptchaRef}
+							size='invisible'
+							sitekey={process.env.REACT_APP_RECAPTCHA_SITE_KEY!}
 						/>
 					</div>
 					<Button
 						block={{
 							_type: 'button',
-							text: 'Send Message',
+							text: isSubmitting ? 'Sending...' : 'Send Message',
 							url: '#',
 							buttonType: 'contained',
 							colorScheme: 'primary',
 							size: 'medium',
 						}}
+						type='submit'
 					/>
 				</form>
 			</div>

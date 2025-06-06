@@ -26,17 +26,33 @@ const DynamicPage: React.FC = () => {
 			try {
 				const slugQuery = slug ? `/${slug}` : '/'
 				const query = `*[_type == "page" && slug.current == "${slugQuery}"][0]{
-          _id,
-          title,
-          slug,
-          pageType,
-          customComponent,
-          content[]{
-            ...,
-            downloads[]->,
-            button->
-          }
-        }`
+					_id,
+					title,
+					slug,
+					pageType,
+					customComponent,
+					content[]{
+						...,
+						downloads[]->,
+						button->,
+						"images": images[]{
+							"_key": _key,
+							"_type": _type,
+							...*[_type == "mediaImage" && _id == ^._ref][0]{
+								title,
+								image,
+								styles,
+								description,
+								organization,
+								role,
+								year,
+								director,
+								conductor,
+								photographer
+							}
+						}
+					}
+				}`
 
 				const data = await (client as any).fetch(query)
 

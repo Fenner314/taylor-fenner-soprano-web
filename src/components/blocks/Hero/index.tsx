@@ -12,12 +12,17 @@ interface HeroProps {
 		title?: string
 		text?: any
 		image?: any
+		label?: string
 	}
 }
 
 const Hero: React.FC<HeroProps> = ({ block }) => {
 	return (
-		<div key={block._key || block._id} className='hero-section'>
+		<div
+			key={block._key || block._id}
+			className='hero-section'
+			data-page={block.label}
+		>
 			{block.image && (
 				<img
 					src={urlForImage(block.image).url()}

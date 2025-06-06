@@ -12,8 +12,8 @@
 	overflow: hidden;
 }
 
-.block-banner[data-page='home banner'] {
-	margin-top: -26%;
+.block-banner[data-page='biography-blockBanner'] > .block-banner-title {
+	font-size: var(--font-size-3xl);
 }
 
 .block-banner-title {

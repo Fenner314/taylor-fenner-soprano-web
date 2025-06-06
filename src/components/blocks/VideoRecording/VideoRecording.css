@@ -1,0 +1,42 @@
+.video-item {
+	margin: 2rem auto;
+	max-width: 900px;
+	width: 100%;
+}
+
+.video-wrapper {
+	position: relative;
+	padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+	height: 0;
+	overflow: hidden;
+	border-radius: 12px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.video-wrapper iframe {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	border-radius: 12px;
+}
+
+.video-title {
+	margin: 1rem 0 0.5rem;
+	font-size: 1.5rem;
+	color: var(--text-dark);
+}
+
+.video-description {
+	margin: 0;
+	color: var(--text-secondary);
+	line-height: 1.5;
+}
+
+.video-item.error {
+	padding: 1rem;
+	background-color: var(--bg-gray-1);
+	border-radius: 8px;
+	color: var(--text-error);
+}

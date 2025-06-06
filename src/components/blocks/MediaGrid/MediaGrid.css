@@ -1,0 +1,17 @@
+.media-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	max-width: 900px;
+	margin: 0 auto;
+	padding: 2rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+	.media-grid {
+		width: 100vw;
+		max-width: 100vw;
+		margin-left: calc(-50vw + 50%);
+		padding: 2rem 0;
+	}
+}

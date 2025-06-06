@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
 	BrowserRouter as Router,
 	Routes,
@@ -6,12 +6,18 @@ import {
 	Link,
 	Navigate,
 } from 'react-router-dom'
+import emailjs from '@emailjs/browser'
 import './App.css'
 
 import DynamicPage from './pages/DynamicPage'
 // import Studio from './components/Studio'
 
 function App() {
+	useEffect(() => {
+		// Initialize EmailJS
+		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
+	}, [])
+
 	return (
 		<Router>
 			<div className='App'>
