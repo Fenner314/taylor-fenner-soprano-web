@@ -45,6 +45,7 @@ const BlockBanner: React.FC<BlockBannerProps> = ({ block }) => {
 			if (!banner) return
 
 			const title = banner.getAttribute('data-page')
+			console.log({ title })
 			if (title === 'home-blockBanner' || title === 'biography-blockBanner') {
 				const height = banner.offsetHeight
 				banner.style.marginTop = `calc(-1 * (var(--spacing-2xl) + ${height * 0.25}px))`

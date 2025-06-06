@@ -1,0 +1,79 @@
+.mobile-nav {
+	position: fixed;
+	bottom: 0;
+	left: 0;
+	right: 0;
+	background: var(--bg-light);
+	box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+}
+
+.nav-indicator-container {
+	position: absolute;
+	top: -5px;
+	left: 0;
+	right: 0;
+	height: 5px;
+	background: transparent;
+}
+
+.nav-indicator {
+	position: absolute;
+	top: 0;
+	height: 100%;
+	background: var(--accent);
+	transition: left 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+	border-top-left-radius: 4px;
+	border-top-right-radius: 4px;
+}
+
+.nav-items {
+	display: flex;
+	justify-content: space-around;
+	padding: 12px 0 8px;
+}
+
+.nav-item {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-decoration: none;
+	color: #666;
+	width: 25%;
+	transition: color 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.nav-item svg {
+	width: 24px;
+	height: 24px;
+	fill: currentColor;
+	stroke: currentColor;
+	stroke-width: 2;
+	stroke-linecap: round;
+	stroke-linejoin: round;
+}
+
+.nav-item.active {
+	color: var(--bg-dark);
+}
+
+.nav-label {
+	font-size: 14px;
+	margin-top: 4px;
+}
+
+/* Add padding to the bottom of the page content to account for fixed navigation */
+body {
+	padding-bottom: 80px;
+}
+
+/* Hide navigation on larger screens */
+@media (min-width: 768px) {
+	.mobile-nav {
+		display: none;
+	}
+
+	body {
+		padding-bottom: 0;
+	}
+}

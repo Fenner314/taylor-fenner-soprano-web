@@ -46,3 +46,10 @@
 	max-width: 600px;
 	margin: auto;
 }
+
+/* Position reCAPTCHA above mobile nav */
+.grecaptcha-badge {
+	display: none;
+	visibility: hidden;
+	opacity: 0;
+}

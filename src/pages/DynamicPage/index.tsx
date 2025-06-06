@@ -1,78 +1,20 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import { useParams } from 'react-router-dom'
-import { client } from '../../lib/sanity'
 import { getCustomPageComponent } from '../../utils/customPageComponents'
 import renderBlock from '../../utils/renderBlock'
+import { usePagesContext } from '../../contexts/PagesContext'
 import './DynamicPage.css'
 import Title from '../../components/custom/Title'
 
-interface PageData {
-	_id: string
-	title: string
-	slug: { current: string }
-	pageType?: string
-	content?: any[]
-	customComponent?: string
-}
-
 const DynamicPage: React.FC = () => {
 	const { slug } = useParams<{ slug: string }>()
-	const [pageData, setPageData] = useState<PageData | null>(null)
-	const [loading, setLoading] = useState(true)
-	const [error, setError] = useState<string | null>(null)
+	const { pages, isLoading, error } = usePagesContext()
 
-	useEffect(() => {
-		const fetchPageData = async () => {
-			try {
-				const slugQuery = slug ? `/${slug}` : '/'
-				const query = `*[_type == "page" && slug.current == "${slugQuery}"][0]{
-					_id,
-					title,
-					slug,
-					pageType,
-					customComponent,
-					content[]{
-						...,
-						downloads[]->,
-						button->,
-						"images": images[]{
-							"_key": _key,
-							"_type": _type,
-							...*[_type == "mediaImage" && _id == ^._ref][0]{
-								title,
-								image,
-								styles,
-								description,
-								organization,
-								role,
-								year,
-								director,
-								conductor,
-								photographer
-							}
-						}
-					}
-				}`
+	// Find the current page from the loaded pages
+	const currentSlug = slug ? `/${slug}` : '/'
+	const pageData = pages.find((page) => page.slug.current === currentSlug)
 
-				const data = await (client as any).fetch(query)
-
-				if (data) {
-					setPageData(data)
-				} else {
-					setError('Page not found')
-				}
-			} catch (err) {
-				console.error('Error fetching page data:', err)
-				setError('Failed to load page')
-			} finally {
-				setLoading(false)
-			}
-		}
-
-		fetchPageData()
-	}, [slug])
-
-	if (loading) {
+	if (isLoading) {
 		return (
 			<div className='page-container'>
 				<div className='loading'>Loading page...</div>

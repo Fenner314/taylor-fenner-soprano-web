@@ -10,7 +10,8 @@ import emailjs from '@emailjs/browser'
 import './App.css'
 
 import DynamicPage from './pages/DynamicPage'
-// import Studio from './components/Studio'
+import Navigation from './components/Navigation'
+import { PagesProvider } from './contexts/PagesContext'
 
 function App() {
 	useEffect(() => {
@@ -19,33 +20,18 @@ function App() {
 	}, [])
 
 	return (
-		<Router>
-			<div className='App'>
-				{/* <nav>
-					<ul>
-						<li>
-							<Link to='/'>Home</Link>
-						</li>
-						<li>
-							<Link to='/about'>About</Link>
-						</li>
-						<li>
-							<Link to='/media'>Media</Link>
-						</li>
-						<li>
-							<Link to='/contact'>Contact</Link>
-						</li>
-					</ul>
-				</nav> */}
-
-				<Routes>
-					<Route path='/' element={<DynamicPage />} />
-					{/* <Route path='/' element={<Navigate to='/' replace />} /> */}
-					<Route path='/:slug' element={<DynamicPage />} />
-					<Route path='*' element={<div className='error'>Page not found</div>} />
-				</Routes>
-			</div>
-		</Router>
+		<PagesProvider>
+			<Router>
+				<div className='App'>
+					<Routes>
+						<Route path='/' element={<DynamicPage />} />
+						<Route path='/:slug' element={<DynamicPage />} />
+						<Route path='*' element={<div className='error'>Page not found</div>} />
+					</Routes>
+					<Navigation />
+				</div>
+			</Router>
+		</PagesProvider>
 	)
 }
 
