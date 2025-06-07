@@ -17,7 +17,6 @@ import Layout from './components/layout/Layout'
 
 function App() {
 	useEffect(() => {
-		// Initialize EmailJS
 		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
 	}, [])
 
