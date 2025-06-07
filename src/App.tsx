@@ -12,6 +12,7 @@ import './App.css'
 import DynamicPage from './pages/DynamicPage'
 import Navigation from './components/Navigation'
 import { PagesProvider } from './contexts/PagesContext'
+import Footer from './components/Footer'
 
 function App() {
 	useEffect(() => {
@@ -29,6 +30,7 @@ function App() {
 						<Route path='*' element={<div className='error'>Page not found</div>} />
 					</Routes>
 					<Navigation />
+					<Footer />
 				</div>
 			</Router>
 		</PagesProvider>
