@@ -20,8 +20,7 @@ const DynamicPage: React.FC = () => {
 	const currentSlug = slug ? `/${slug}` : '/'
 	const pageData = pages.find((page) => page.slug.current === currentSlug)
 
-	// Only show loading if we don't have cached data
-	if (isLoading && !lastUpdated) {
+	if ((isLoading && !lastUpdated) || pages.length === 0) {
 		return (
 			<div className='page-container'>
 				<Loading text='Loading page content...' size='large' />
@@ -49,7 +48,8 @@ const DynamicPage: React.FC = () => {
 		)
 	}
 
-	if (!pageData) {
+	// Only show "Page Not Found" if we have loaded pages but can't find the requested one
+	if (!pageData && pages.length > 0) {
 		return (
 			<div className='page-container'>
 				<div
@@ -65,6 +65,14 @@ const DynamicPage: React.FC = () => {
 					<h2>Page Not Found</h2>
 					<p>The page you're looking for doesn't exist.</p>
 				</div>
+			</div>
+		)
+	}
+
+	if (!pageData) {
+		return (
+			<div className='page-container'>
+				<Loading text='Loading page content...' size='large' />
 			</div>
 		)
 	}
