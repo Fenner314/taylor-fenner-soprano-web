@@ -3,6 +3,7 @@ import { CustomComponentProps } from '../../../utils/customPageComponents'
 import './Events.css'
 import Title from '../Title'
 import Button from '../../blocks/Button'
+import Loading from '../../blocks/Loading'
 import calendarIcon from '../../../assets/icons/calendar.png'
 import pinIcon from '../../../assets/icons/pin.png'
 
@@ -165,7 +166,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 		loadEvents(currentYear)
 	}, [currentYear, calendarId])
 
-	if (loading) return <div>Loading events...</div>
+	if (loading) return <Loading text='Loading events...' size='large' />
 
 	if (error) {
 		return (
@@ -376,13 +377,12 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 						}}
 					/>
 				) : (
-					hasMoreEvents && (
+					hasMoreEvents &&
+					!loadingMore && (
 						<Button
 							block={{
 								_type: 'button',
-								text: loadingMore
-									? 'Loading...'
-									: `Load Previous Year (${currentYear - allLoadedYears.length})`,
+								text: `Load Previous Year (${currentYear - allLoadedYears.length})`,
 								url: '#',
 								buttonType: 'text',
 								colorScheme: 'primary',
@@ -400,6 +400,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 						/>
 					)
 				)}
+				{loadingMore && <Loading size='small' text='Loading previous year...' />}
 			</div>
 		</div>
 	)
