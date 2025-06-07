@@ -42,11 +42,8 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 			const startDate = new Date(year, 5, 1) // June 1st of the year
 			const endDate = new Date(year + 1, 4, 31) // May 31st of next year
 
-			const calendarId =
-				'067431df6cac0cb728dc6fa5fc45751d846d9dd154ed7b8da18a5ec8a78535d0@group.calendar.google.com'
-			// const calendarId = process.env.REACT_APP_GOOGLE_CALENDAR_ID
-			const apiKey = 'AIzaSyBCorrVdoEZVwOQ6i2jDjan3IDbHJlBEvE'
-			// const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
+			const calendarId = process.env.REACT_APP_GOOGLE_CALENDAR_ID
+			const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
 
 			if (!calendarId || !apiKey) {
 				throw new Error('Missing calendar ID or API key in environment variables')
@@ -107,7 +104,6 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 						}
 					})
 
-					console.log(parsedUrl)
 					return {
 						id: item.id,
 						title: item.summary || 'No Title',
@@ -187,10 +183,10 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 		)
 	}
 
-	// Sort events by date (soonest first)
+	// Sort events by date (newest first)
 	const sortedEvents = [...events].sort((a, b) => {
 		if (a.start && b.start) {
-			return new Date(a.start).getTime() - new Date(b.start).getTime()
+			return new Date(b.start).getTime() - new Date(a.start).getTime()
 		}
 		return 0
 	})
@@ -388,7 +384,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 									? 'Loading...'
 									: `Load Previous Year (${currentYear - allLoadedYears.length})`,
 								url: '#',
-								buttonType: 'contained',
+								buttonType: 'text',
 								colorScheme: 'primary',
 								size: 'medium',
 								customStyles: loadingMore
@@ -396,6 +392,10 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 											backgroundColor: { hex: 'var(--secondary)' },
 										}
 									: undefined,
+								onClick: (e) => {
+									e.preventDefault()
+									loadMoreEvents()
+								},
 							}}
 						/>
 					)

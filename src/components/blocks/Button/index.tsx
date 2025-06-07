@@ -18,6 +18,7 @@ interface ButtonProps {
 		}
 		openInNewTab?: boolean
 		ariaLabel?: string
+		onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 	}
 	type?: 'button' | 'submit' | 'reset'
 }
@@ -37,6 +38,13 @@ const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 		return styles
 	}
 
+	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+		if (block.onClick) {
+			e.preventDefault()
+			block.onClick(e)
+		}
+	}
+
 	// For submit buttons, we don't want to wrap in an anchor tag
 	if (props.type === 'submit') {
 		return (
@@ -53,6 +61,7 @@ const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 					aria-label={block.ariaLabel}
 					style={getCustomStyles()}
 					type={props.type}
+					onClick={handleClick}
 				>
 					{block.text}
 				</button>
@@ -78,6 +87,7 @@ const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 					aria-label={block.ariaLabel}
 					style={getCustomStyles()}
 					type={props.type}
+					onClick={handleClick}
 				>
 					{block.text}
 				</button>
