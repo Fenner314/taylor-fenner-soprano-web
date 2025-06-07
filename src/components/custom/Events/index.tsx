@@ -108,7 +108,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 						id: item.id,
 						title: item.summary || 'No Title',
 						start: item.start?.dateTime || item.start?.date,
-						end: item.end?.dateTime || item.end?.date,
+						// end: item.end?.dateTime || item.end?.date,
 						description: parsedDescription,
 						location: item.location,
 						url: parsedUrl,
