@@ -37,159 +37,93 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 	const [hasMoreEvents, setHasMoreEvents] = useState(true)
 	const [allLoadedYears, setAllLoadedYears] = useState<number[]>([])
 
-	// Generate comprehensive mock data for multiple years
-	const generateMockEvents = (year: number): Event[] => {
-		const events: Event[] = [
-			{
-				id: `${year}-la-traviata`,
-				title: 'La Traviata Performance',
-				start: `${year}-07-15T19:30:00`,
-				end: `${year}-07-15T22:00:00`,
-				description: `Evening performance of Verdi's La Traviata at the Metropolitan Opera House.`,
-				location: 'Metropolitan Opera House, New York',
-				url: 'https://tickets.example.com/la-traviata',
-				// featured: true,
-			},
-			{
-				id: `${year}-masterclass`,
-				title: 'Masterclass: Vocal Techniques',
-				start: `${year}-06-20T14:00:00`,
-				end: `${year}-06-20T16:00:00`,
-				description:
-					'Interactive masterclass focusing on advanced vocal techniques for opera singers.',
-				location: 'Juilliard School, New York',
-			},
-			{
-				id: `${year}-recital`,
-				title: 'Recital: Italian Art Songs',
-				start: `${year}-08-10T20:00:00`,
-				end: `${year}-08-10T21:30:00`,
-				description: 'An intimate evening of Italian art songs and arias.',
-				location: 'Carnegie Hall, New York',
-				url: 'https://tickets.example.com/recital',
-			},
-			{
-				id: `${year}-boheme`,
-				title: 'La Bohème Performance',
-				start: `${year}-09-05T19:00:00`,
-				end: `${year}-09-05T22:30:00`,
-				description: "Opening night of Puccini's beloved La Bohème.",
-				location: 'Lincoln Center, New York',
-				// featured: year === new Date().getFullYear(), // Only current year is featured
-			},
-			{
-				id: `${year}-workshop`,
-				title: 'Young Artists Workshop',
-				start: `${year}-10-12T10:00:00`,
-				end: `${year}-10-12T17:00:00`,
-				description: 'Full-day workshop for emerging opera singers.',
-				location: 'Metropolitan Opera Studio',
-			},
-			{
-				id: `${year}-gala`,
-				title: 'Annual Opera Gala',
-				start: `${year}-11-30T18:00:00`,
-				end: `${year}-11-30T23:00:00`,
-				description: 'Elegant evening gala featuring opera highlights and dinner.',
-				location: 'Grand Ballroom, Plaza Hotel',
-				url: 'https://tickets.example.com/gala',
-				// featured: true,
-			},
-			{
-				id: `${year}-holiday`,
-				title: 'Holiday Concert',
-				start: `${year}-12-15T19:30:00`,
-				end: `${year}-12-15T21:00:00`,
-				description: 'Festive holiday concert featuring seasonal classics.',
-				location: "St. Patrick's Cathedral, New York",
-			},
-			{
-				id: `${year + 1}-winter`,
-				title: 'Winter Showcase',
-				start: `${year + 1}-01-20T20:00:00`,
-				end: `${year + 1}-01-20T22:00:00`,
-				description: 'Winter showcase featuring student performances.',
-				location: 'Juilliard School, New York',
-			},
-			{
-				id: `${year + 1}-valentine`,
-				title: "Valentine's Day Special",
-				start: `${year + 1}-02-14T19:00:00`,
-				end: `${year + 1}-02-14T21:30:00`,
-				description: 'Romantic evening of love songs and duets.',
-				location: 'Lincoln Center, New York',
-				// featured: true,
-			},
-			{
-				id: `${year + 1}-spring`,
-				title: 'Spring Recital',
-				start: `${year + 1}-04-22T15:00:00`,
-				end: `${year + 1}-04-22T17:00:00`,
-				description: 'Afternoon recital celebrating the arrival of spring.',
-				location: 'Carnegie Hall, New York',
-			},
-			{
-				id: `${year + 1}-finale`,
-				title: 'Season Finale Gala',
-				start: `${year + 1}-05-28T18:30:00`,
-				end: `${year + 1}-05-28T23:30:00`,
-				description: 'Grand finale celebration of the opera season.',
-				location: 'Metropolitan Opera House, New York',
-				url: 'https://tickets.example.com/finale',
-				// featured: true,
-			},
-		]
-
-		// Don't include events from before 2020 (simulate no historical data)
-		return year >= 2020 ? events : []
-	}
-
 	const fetchEventsForYear = async (year: number): Promise<Event[]> => {
 		try {
-			// Simulate API delay
-			await new Promise((resolve) => setTimeout(resolve, 500))
+			const startDate = new Date(year, 5, 1) // June 1st of the year
+			const endDate = new Date(year + 1, 4, 31) // May 31st of next year
 
-			// For mock data - in real implementation, this would be Google Calendar API
-			const yearEvents = generateMockEvents(year)
+			const calendarId =
+				'067431df6cac0cb728dc6fa5fc45751d846d9dd154ed7b8da18a5ec8a78535d0@group.calendar.google.com'
+			// const calendarId = process.env.REACT_APP_GOOGLE_CALENDAR_ID
+			const apiKey = 'AIzaSyBCorrVdoEZVwOQ6i2jDjan3IDbHJlBEvE'
+			// const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
 
-			/* 
-      TODO: Replace with actual Google Calendar API call:
-      
-      const startDate = new Date(year, 5, 1) // June 1st of the year
-      const endDate = new Date(year + 1, 4, 31) // May 31st of next year
-      
-      const response = await fetch(
-        `https://www.googleapis.com/calendar/v3/calendars/${calendarId}/events?` +
-        new URLSearchParams({
-          key: process.env.REACT_APP_GOOGLE_CALENDAR_API_KEY,
-          timeMin: startDate.toISOString(),
-          timeMax: endDate.toISOString(),
-          maxResults: '50',
-          singleEvents: 'true',
-          orderBy: 'startTime'
-        })
-      )
-      
-      const data = await response.json()
-      
-      const googleEvents: Event[] = data.items?.map((item: any) => ({
-        id: item.id,
-        title: item.summary,
-        start: item.start?.dateTime || item.start?.date,
-        end: item.end?.dateTime || item.end?.date,
-        description: item.description,
-        location: item.location,
-        url: item.htmlLink,
-        featured: item.description?.includes('[FEATURED]')
-      })) || []
-      
-      return googleEvents
-      */
+			if (!calendarId || !apiKey) {
+				throw new Error('Missing calendar ID or API key in environment variables')
+			}
 
-			return yearEvents
+			const response = await fetch(
+				`https://www.googleapis.com/calendar/v3/calendars/${encodeURIComponent(
+					calendarId
+				)}/events?` +
+					new URLSearchParams({
+						key: apiKey,
+						timeMin: startDate.toISOString(),
+						timeMax: endDate.toISOString(),
+						maxResults: '50',
+						singleEvents: 'true',
+						orderBy: 'startTime',
+					})
+			)
+
+			if (!response.ok) {
+				const errorText = await response.text()
+				throw new Error(`Calendar API error: ${response.status} - ${errorText}`)
+			}
+
+			const data = await response.json()
+
+			const googleEvents: Event[] =
+				data.items?.map((item: any) => {
+					// Parse the description for structured data
+					const description = item.description || ''
+					const lines = description.trim().split('<br>')
+					let parsedDescription = description
+					let parsedUrl = ''
+					let featured = false
+
+					lines.forEach((line: any) => {
+						const colonIndex = line.indexOf(':')
+						if (colonIndex > 0) {
+							const key = line.substring(0, colonIndex).trim().toLowerCase()
+							if (key === 'description') {
+								parsedDescription = line.substring(colonIndex + 1).trim()
+							} else if (
+								key === 'featured' &&
+								line
+									.substring(colonIndex + 1)
+									.trim()
+									.toLowerCase() === 'true'
+							) {
+								featured = true
+							} else if (key === 'url') {
+								const url = line.substring(colonIndex + 1).trim()
+								if (url.match(/href="([^"]+)"/)) {
+									parsedUrl = url.match(/href="([^"]+)"/)[1]
+								} else {
+									parsedUrl = url
+								}
+							}
+						}
+					})
+
+					console.log(parsedUrl)
+					return {
+						id: item.id,
+						title: item.summary || 'No Title',
+						start: item.start?.dateTime || item.start?.date,
+						end: item.end?.dateTime || item.end?.date,
+						description: parsedDescription,
+						location: item.location,
+						url: parsedUrl,
+						featured: featured,
+					}
+				}) || []
+
+			return googleEvents
 		} catch (err) {
 			console.error(`Error fetching events for ${year}:`, err)
-			return []
+			throw err // Let the error be handled by the loadEvents function
 		}
 	}
 
@@ -211,11 +145,12 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 				setAllLoadedYears([year])
 			}
 
-			// Check if there are more events available (simulate checking previous years)
-			const hasMoreData = year > 2020 // Simulate data availability from 2020
-			setHasMoreEvents(hasMoreData)
+			// Check if there are more events available
+			// We'll keep loading until we hit a year with no events
+			setHasMoreEvents(yearEvents.length > 0)
 		} catch (err) {
-			setError('Failed to load events')
+			console.error('Failed to load events:', err)
+			setError(err instanceof Error ? err.message : 'Failed to load events')
 		} finally {
 			setLoading(false)
 			setLoadingMore(false)
