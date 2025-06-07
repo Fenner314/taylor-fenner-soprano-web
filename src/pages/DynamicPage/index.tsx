@@ -1,5 +1,5 @@
-import React from 'react'
-import { useParams } from 'react-router-dom'
+import React, { useEffect } from 'react'
+import { useParams, useLocation } from 'react-router-dom'
 import { getCustomPageComponent } from '../../utils/customPageComponents'
 import renderBlock from '../../utils/renderBlock'
 import { usePagesContext } from '../../contexts/PagesContext'
@@ -10,6 +10,11 @@ import Title from '../../components/custom/Title'
 const DynamicPage: React.FC = () => {
 	const { slug } = useParams<{ slug: string }>()
 	const { pages, isLoading, error, lastUpdated } = usePagesContext()
+	const location = useLocation()
+
+	useEffect(() => {
+		window.scrollTo(0, 0)
+	}, [location.pathname])
 
 	// Find the current page from the loaded pages
 	const currentSlug = slug ? `/${slug}` : '/'

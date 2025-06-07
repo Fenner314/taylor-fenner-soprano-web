@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { urlForImage } from '../../../lib/sanity'
 import './MediaImage.css'
 
@@ -36,9 +36,11 @@ const MediaImage: React.FC<MediaImageProps> = ({
 	onGridSpacesChange,
 }) => {
 	const imageRef = useRef<HTMLImageElement>(null)
-	const [aspectRatio, setAspectRatio] = React.useState<
+	const calculatedRef = useRef(false)
+	const [aspectRatio, setAspectRatio] = useState<
 		'square' | 'portrait' | 'landscape'
 	>('square')
+	const [imageLoaded, setImageLoaded] = useState(false)
 
 	// Parse custom styles
 	const customStyles = React.useMemo(() => {
@@ -65,41 +67,52 @@ const MediaImage: React.FC<MediaImageProps> = ({
 	}
 
 	useEffect(() => {
-		const determineAspectRatio = () => {
-			const img = imageRef.current
-			if (!img) return
+		calculatedRef.current = false
+		setImageLoaded(false)
+		setAspectRatio('square')
+
+		const calculateAspectRatio = (img: HTMLImageElement) => {
+			if (calculatedRef.current) return
+			calculatedRef.current = true
 
 			const ratio = img.naturalWidth / img.naturalHeight
+			let newAspectRatio: 'square' | 'portrait' | 'landscape' = 'square'
 
-			// Calculate natural aspect ratio
-			let naturalAspectRatio: 'square' | 'portrait' | 'landscape' = 'square'
 			if (ratio > 1.3) {
-				naturalAspectRatio = 'landscape'
+				newAspectRatio = 'landscape'
 			} else if (ratio < 0.7) {
-				naturalAspectRatio = 'portrait'
+				newAspectRatio = 'portrait'
 			}
 
-			// If it's the last image and it's landscape, check if it would create a gap
-			if (isLast && naturalAspectRatio === 'landscape') {
-				const totalSpacesTaken = totalGridSpacesBefore
-				// If we're starting on the second column, make it square to avoid gap
-				const shouldMakeSquare = totalSpacesTaken % 2 === 1
-				const finalAspectRatio = shouldMakeSquare ? 'square' : 'landscape'
-				setAspectRatio(finalAspectRatio)
-				onGridSpacesChange?.(getGridSpaces(finalAspectRatio))
-			} else {
-				setAspectRatio(naturalAspectRatio)
-				onGridSpacesChange?.(getGridSpaces(naturalAspectRatio))
+			if (isLast && newAspectRatio === 'landscape') {
+				const shouldMakeSquare = totalGridSpacesBefore % 2 === 1
+				newAspectRatio = shouldMakeSquare ? 'square' : 'landscape'
 			}
+
+			setAspectRatio(newAspectRatio)
+			setImageLoaded(true)
+			onGridSpacesChange?.(getGridSpaces(newAspectRatio))
 		}
 
 		const img = imageRef.current
-		if (img?.complete) {
-			determineAspectRatio()
-		} else if (img) {
-			img.onload = determineAspectRatio
+		if (!img) return
+
+		const handleLoad = () => {
+			if (img.naturalWidth > 0) {
+				calculateAspectRatio(img)
+			}
 		}
-	}, [block.image, isLast, totalGridSpacesBefore, onGridSpacesChange])
+
+		img.addEventListener('load', handleLoad)
+
+		if (img.complete && img.naturalWidth > 0) {
+			handleLoad()
+		}
+
+		return () => {
+			img.removeEventListener('load', handleLoad)
+		}
+	}, [block.image, isLast, totalGridSpacesBefore])
 
 	if (!block.image?.asset) {
 		console.warn('No image data found for block:', block)
@@ -113,6 +126,8 @@ const MediaImage: React.FC<MediaImageProps> = ({
 			style={{
 				gridColumn: aspectRatio === 'landscape' ? 'span 2' : 'span 1',
 				gridRow: aspectRatio === 'portrait' ? 'span 2' : 'span 1',
+				opacity: imageLoaded ? 1 : 0,
+				transition: 'opacity 0.3s ease-in-out',
 			}}
 		>
 			<div className='media-image-wrapper'>

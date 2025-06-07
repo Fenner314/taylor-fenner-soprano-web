@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import MediaImage from '../MediaImage'
 import './MediaGrid.css'
 
@@ -31,9 +31,12 @@ interface MediaGridProps {
 }
 
 const MediaGrid: React.FC<MediaGridProps> = ({ block }) => {
-	const gridSpacesRef = useRef<number[]>([])
+	const [gridSpaces, setGridSpaces] = useState<number[]>([])
 
-	console.log('MediaGrid block:', block)
+	// Reset grid spaces when images change
+	useEffect(() => {
+		setGridSpaces(new Array(block.images?.length || 0).fill(1))
+	}, [block.images])
 
 	if (!block.images?.length) {
 		console.warn('No images found in MediaGrid block')
@@ -41,16 +44,19 @@ const MediaGrid: React.FC<MediaGridProps> = ({ block }) => {
 	}
 
 	// Function to update grid spaces taken by an image
-	const updateGridSpaces = (index: number, gridSpaces: number) => {
-		gridSpacesRef.current[index] = gridSpaces
-		console.log('Grid spaces updated:', gridSpacesRef.current)
+	const updateGridSpaces = (index: number, spaces: number) => {
+		setGridSpaces((current) => {
+			const newSpaces = [...current]
+			newSpaces[index] = spaces
+			return newSpaces
+		})
 	}
 
 	// Calculate total grid spaces taken before an index
 	const getTotalGridSpacesBefore = (index: number) => {
-		return gridSpacesRef.current
+		return gridSpaces
 			.slice(0, index)
-			.reduce((sum, spaces) => sum + (spaces || 0), 0)
+			.reduce((sum, spaces) => sum + (spaces || 1), 0)
 	}
 
 	return (
