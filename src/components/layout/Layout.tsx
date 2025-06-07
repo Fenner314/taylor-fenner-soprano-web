@@ -7,13 +7,13 @@ interface LayoutProps {
 }
 
 const Layout: React.FC<LayoutProps> = ({ children }) => {
-	const { isLoading, error } = usePagesContext()
+	const { isLoading, error, lastUpdated } = usePagesContext()
 
-	if (isLoading) {
+	if (isLoading && !lastUpdated) {
 		return <Loading text='Loading page...' size='large' fullscreen />
 	}
 
-	if (error) {
+	if (error && !lastUpdated) {
 		return (
 			<div
 				className='error'
@@ -31,7 +31,32 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
 		)
 	}
 
-	return <>{children}</>
+	return (
+		<>
+			{children}
+			{isLoading && lastUpdated && (
+				<div
+					style={{
+						position: 'fixed',
+						bottom: '1rem',
+						right: '1rem',
+						display: 'flex',
+						alignItems: 'center',
+						gap: '0.5rem',
+						background: 'rgba(255, 255, 255, 0.9)',
+						padding: '0.5rem 1rem',
+						borderRadius: '8px',
+						boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+						fontSize: '0.875rem',
+						color: 'var(--text-dark)',
+					}}
+				>
+					<Loading size='small' text='' />
+					<span>Updating content...</span>
+				</div>
+			)}
+		</>
+	)
 }
 
 export default Layout

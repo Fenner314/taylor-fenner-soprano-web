@@ -3,29 +3,43 @@ import { useParams } from 'react-router-dom'
 import { getCustomPageComponent } from '../../utils/customPageComponents'
 import renderBlock from '../../utils/renderBlock'
 import { usePagesContext } from '../../contexts/PagesContext'
+import Loading from '../../components/blocks/Loading'
 import './DynamicPage.css'
 import Title from '../../components/custom/Title'
 
 const DynamicPage: React.FC = () => {
 	const { slug } = useParams<{ slug: string }>()
-	const { pages, isLoading, error } = usePagesContext()
+	const { pages, isLoading, error, lastUpdated } = usePagesContext()
 
 	// Find the current page from the loaded pages
 	const currentSlug = slug ? `/${slug}` : '/'
 	const pageData = pages.find((page) => page.slug.current === currentSlug)
 
-	if (isLoading) {
+	// Only show loading if we don't have cached data
+	if (isLoading && !lastUpdated) {
 		return (
 			<div className='page-container'>
-				<div className='loading'>Loading page...</div>
+				<Loading text='Loading page content...' size='large' />
 			</div>
 		)
 	}
 
-	if (error) {
+	if (error && !lastUpdated) {
 		return (
 			<div className='page-container'>
-				<div className='error'>{error}</div>
+				<div
+					className='error'
+					style={{
+						padding: '2rem',
+						textAlign: 'center',
+						color: 'var(--error)',
+						maxWidth: '600px',
+						margin: '0 auto',
+					}}
+				>
+					<h2>Error Loading Page</h2>
+					<p>{error}</p>
+				</div>
 			</div>
 		)
 	}
@@ -33,7 +47,19 @@ const DynamicPage: React.FC = () => {
 	if (!pageData) {
 		return (
 			<div className='page-container'>
-				<div className='error'>Page not found</div>
+				<div
+					className='error'
+					style={{
+						padding: '2rem',
+						textAlign: 'center',
+						color: 'var(--error)',
+						maxWidth: '600px',
+						margin: '0 auto',
+					}}
+				>
+					<h2>Page Not Found</h2>
+					<p>The page you're looking for doesn't exist.</p>
+				</div>
 			</div>
 		)
 	}
@@ -67,6 +93,30 @@ const DynamicPage: React.FC = () => {
 						<p>No content available for this page.</p>
 					</div>
 				)}
+
+			{/* Show background refresh indicator */}
+			{isLoading && lastUpdated && (
+				<div
+					style={{
+						position: 'fixed',
+						bottom: '1rem',
+						right: '1rem',
+						display: 'flex',
+						alignItems: 'center',
+						gap: '0.5rem',
+						background: 'rgba(255, 255, 255, 0.9)',
+						padding: '0.5rem 1rem',
+						borderRadius: '8px',
+						boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+						fontSize: '0.875rem',
+						color: 'var(--text-dark)',
+						zIndex: 100,
+					}}
+				>
+					<Loading size='small' text='' />
+					<span>Updating page content...</span>
+				</div>
+			)}
 		</div>
 	)
 }
