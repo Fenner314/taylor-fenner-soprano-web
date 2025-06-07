@@ -221,16 +221,6 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 					<div
 						key={event.id}
 						className={`event-item ${event.featured ? 'featured' : ''}`}
-						style={{
-							margin: 0,
-							padding: '1.5rem',
-							background: event.featured ? 'var(--accent)' : 'var(--bg-gray-1)',
-							borderRadius: '12px',
-							border: event.featured
-								? '2px solid var(--primary)'
-								: '1px solid var(--bg-gray-2)',
-							position: 'relative',
-						}}
 					>
 						{event.featured && (
 							<div

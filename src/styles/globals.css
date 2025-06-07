@@ -34,6 +34,8 @@
 	--text-success: #2e7d32;
 	--text-error: #c62828;
 
+	--white: #fff;
+
 	/* Common Spacing */
 	--spacing-xs: 0.25rem; /* 4px */
 	--spacing-sm: 0.5rem; /* 8px */

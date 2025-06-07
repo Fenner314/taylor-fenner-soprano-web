@@ -12,7 +12,7 @@
 
 /* Individual Event Item */
 .event-item {
-	background: var(--text-white);
+	background: var(--white);
 	border-radius: var(--radius-lg);
 	padding: var(--spacing-xl);
 	border: 1px solid var(--bg-gray-light);
