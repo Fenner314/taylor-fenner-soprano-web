@@ -57,7 +57,7 @@ const MediaImage: React.FC<MediaImageProps> = ({
 			case 'landscape':
 				return 2 // Takes 2 columns
 			case 'portrait':
-				return 2 // Takes 2 rows, which is equivalent to 2 grid spaces
+				return 1 // Takes 1 grid space
 			case 'square':
 			default:
 				return 1
@@ -79,19 +79,12 @@ const MediaImage: React.FC<MediaImageProps> = ({
 				naturalAspectRatio = 'portrait'
 			}
 
-			// If it's the last image, check if it would create a gap
-			if (isLast) {
+			// If it's the last image and it's landscape, check if it would create a gap
+			if (isLast && naturalAspectRatio === 'landscape') {
 				const totalSpacesTaken = totalGridSpacesBefore
-				const naturalSpacesNeeded = getGridSpaces(naturalAspectRatio)
-
-				// If total spaces taken is odd and we need 2 spaces, or
-				// if total spaces taken is even and we need 1 space,
-				// it would create a gap
-				const wouldCreateGap =
-					(totalSpacesTaken % 2 === 1 && naturalSpacesNeeded === 2) ||
-					(totalSpacesTaken % 2 === 0 && naturalSpacesNeeded === 1)
-
-				const finalAspectRatio = wouldCreateGap ? 'square' : naturalAspectRatio
+				// If we're starting on the second column, make it square to avoid gap
+				const shouldMakeSquare = totalSpacesTaken % 2 === 1
+				const finalAspectRatio = shouldMakeSquare ? 'square' : 'landscape'
 				setAspectRatio(finalAspectRatio)
 				onGridSpacesChange?.(getGridSpaces(finalAspectRatio))
 			} else {

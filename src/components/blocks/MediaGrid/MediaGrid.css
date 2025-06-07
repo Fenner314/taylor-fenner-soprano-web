@@ -3,7 +3,6 @@
 	grid-template-columns: repeat(2, 1fr);
 	max-width: 900px;
 	margin: 0 auto;
-	padding: 2rem;
 }
 
 /* Responsive adjustments */

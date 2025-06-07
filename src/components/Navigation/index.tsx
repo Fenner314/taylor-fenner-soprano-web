@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Link, useLocation } from 'react-router-dom'
 import { ReactComponent as HomeIcon } from '../../assets/icons/home.svg'
 import { ReactComponent as PersonIcon } from '../../assets/icons/person.svg'
@@ -41,6 +41,16 @@ const Navigation = () => {
 	const location = useLocation()
 	const path = location.pathname === '/' ? 'home' : location.pathname.slice(1)
 	const { pages, isLoading } = usePagesContext()
+	const [isMobile, setIsMobile] = useState(window.innerWidth < 768)
+
+	useEffect(() => {
+		const handleResize = () => {
+			setIsMobile(window.innerWidth < 768)
+		}
+
+		window.addEventListener('resize', handleResize)
+		return () => window.removeEventListener('resize', handleResize)
+	}, [])
 
 	// Use default nav items while loading or if no pages are found
 	const navItems =
@@ -64,21 +74,25 @@ const Navigation = () => {
 					.sort((a, b) => a.index - b.index)
 			: defaultNavItems
 
+	const activeIndex = navItems.findIndex((item) =>
+		item.path === '/' ? path === 'home' : item.path.slice(1) === path
+	)
+
+	const indicatorStyle = isMobile
+		? {
+				left: `${activeIndex * (100 / navItems.length)}%`,
+				width: `${100 / navItems.length}%`,
+			}
+		: {
+				top: `calc(50% - ${(navItems.length * 76) / 2}px + ${activeIndex * 76}px)`,
+				height: '64px',
+				'--indicator-height': '64px',
+			}
+
 	return (
 		<nav className='mobile-nav'>
 			<div className='nav-indicator-container'>
-				<div
-					className='nav-indicator'
-					style={{
-						left: `${
-							navItems.findIndex((item) =>
-								item.path === '/' ? path === 'home' : item.path.slice(1) === path
-							) *
-							(100 / navItems.length)
-						}%`,
-						width: `${100 / navItems.length}%`,
-					}}
-				/>
+				<div className='nav-indicator' style={indicatorStyle} />
 			</div>
 			<div className='nav-items'>
 				{navItems.map((item) => (

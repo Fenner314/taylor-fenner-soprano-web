@@ -44,6 +44,10 @@
 	max-width: 800px;
 }
 
+.hero-section[data-page='home-hero'] .hero-image {
+	max-width: 1200px;
+}
+
 .hero-content {
 	position: relative;
 	z-index: 2;
