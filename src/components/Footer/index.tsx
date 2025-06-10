@@ -19,7 +19,7 @@ const Footer: React.FC = () => {
 					</div>
 					<div className='social-links'>
 						<a
-							href='https://www.facebook.com'
+							href='https://www.facebook.com/taylorthesoprano'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='Facebook'
@@ -27,23 +27,23 @@ const Footer: React.FC = () => {
 							<FacebookIcon />
 						</a>
 						<a
-							href='https://www.instagram.com'
+							href='https://www.instagram.com/taylorthesoprano'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='Instagram'
 						>
 							<InstagramIcon />
 						</a>
-						<a
+						{/* <a
 							href='https://www.linkedin.com'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='LinkedIn'
 						>
 							<LinkedInIcon />
-						</a>
+						</a> */}
 						<a
-							href='https://www.youtube.com'
+							href='https://www.youtube.com/@taylorthesoprano5587'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='YouTube'

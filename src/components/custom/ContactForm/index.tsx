@@ -34,6 +34,7 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 		try {
 			// Get reCAPTCHA token
 			const token = await recaptchaRef.current?.executeAsync()
+			console.log('token', token)
 			setIsVerifying(false)
 			if (!token) {
 				throw new Error('Please complete the reCAPTCHA verification')
@@ -55,6 +56,7 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 			})
 
 			const result = await response.json()
+			console.log('result', result)
 
 			if (result.success) {
 				setStatus({
