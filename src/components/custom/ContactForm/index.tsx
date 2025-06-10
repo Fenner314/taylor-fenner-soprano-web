@@ -1,7 +1,6 @@
 import React, { useState, useRef } from 'react'
 import { CustomComponentProps } from '../../../utils/customPageComponents'
 import Button from '../../blocks/Button'
-import emailjs from '@emailjs/browser'
 import ReCAPTCHA from 'react-google-recaptcha'
 import './ContactForm.css'
 
@@ -23,41 +22,52 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 		message: '',
 	})
 	const [isSubmitting, setIsSubmitting] = useState(false)
+	const [isVerifying, setIsVerifying] = useState(false)
 	const recaptchaRef = useRef<ReCAPTCHA>(null)
 
 	const handleSubmit = async (e: React.FormEvent) => {
 		e.preventDefault()
 		setIsSubmitting(true)
+		setIsVerifying(true)
 		setStatus({ type: null, message: '' })
 
 		try {
 			// Get reCAPTCHA token
 			const token = await recaptchaRef.current?.executeAsync()
+			setIsVerifying(false)
 			if (!token) {
 				throw new Error('Please complete the reCAPTCHA verification')
 			}
 
-			await emailjs.send(
-				process.env.REACT_APP_EMAILJS_SERVICE_ID!,
-				process.env.REACT_APP_EMAILJS_TEMPLATE_ID!,
-				{
+			const response = await fetch('https://api.web3forms.com/submit', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+					Accept: 'application/json',
+				},
+				body: JSON.stringify({
+					access_key: process.env.REACT_APP_WEB3_FORMS_API_KEY,
 					name: formData.name,
 					email: formData.email,
 					message: formData.message,
-					to_name: 'Taylor Fenner',
-					'g-recaptcha-response': token,
-				},
-				process.env.REACT_APP_EMAILJS_PUBLIC_KEY
-			)
-
-			setStatus({
-				type: 'success',
-				message: 'Thank you! Your message has been sent.',
+					subject: 'New Contact Form Submission - Taylor Fenner',
+				}),
 			})
-			setFormData({ name: '', email: '', message: '' }) // Reset form
-			recaptchaRef.current?.reset() // Reset reCAPTCHA
+
+			const result = await response.json()
+
+			if (result.success) {
+				setStatus({
+					type: 'success',
+					message: 'Thank you! Your message has been sent.',
+				})
+				setFormData({ name: '', email: '', message: '' }) // Reset form
+				recaptchaRef.current?.reset() // Reset reCAPTCHA
+			} else {
+				throw new Error(result.message || 'Something went wrong. Please try again.')
+			}
 		} catch (error) {
-			console.error('Failed to send email:', error)
+			console.error('Failed to send message:', error)
 			setStatus({
 				type: 'error',
 				message:
@@ -149,11 +159,24 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 					<Button
 						block={{
 							_type: 'button',
-							text: isSubmitting ? 'Sending...' : 'Send Message',
+							text: isVerifying
+								? 'Verifying...'
+								: isSubmitting
+									? 'Sending...'
+									: 'Send Message',
 							url: '#',
 							buttonType: 'contained',
 							colorScheme: 'primary',
 							size: 'medium',
+							customStyles:
+								isVerifying || isSubmitting
+									? {
+											backgroundColor: { hex: 'var(--disabled)' },
+											textColor: { hex: 'var(--text-disabled)' },
+										}
+									: undefined,
+							onClick:
+								isVerifying || isSubmitting ? (e) => e.preventDefault() : undefined,
 						}}
 						type='submit'
 					/>

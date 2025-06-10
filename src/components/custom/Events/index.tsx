@@ -191,28 +191,41 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 	}
 
 	// Sort events by date (newest first)
-	const sortedEvents = [...events].sort((a, b) => {
+	const now = new Date()
+
+	// Split events into upcoming and past
+	const allEvents = [...events].sort((a, b) => {
 		if (a.start && b.start) {
-			return new Date(b.start).getTime() - new Date(a.start).getTime()
+			return new Date(a.start).getTime() - new Date(b.start).getTime()
 		}
 		return 0
 	})
 
-	// Filter for only upcoming events
-	const now = new Date()
-	const upcomingEvents = sortedEvents.filter((event) => {
-		if (!event.start) return false
-		return new Date(event.start) >= now
-	})
+	const { upcomingEvents, pastEvents } = allEvents.reduce(
+		(acc, event) => {
+			if (!event.start) return acc
+			const eventDate = new Date(event.start)
+			if (eventDate >= now) {
+				acc.upcomingEvents.push(event)
+			} else {
+				acc.pastEvents.push(event)
+			}
+			return acc
+		},
+		{ upcomingEvents: [] as Event[], pastEvents: [] as Event[] }
+	)
 
-	// Show only 3 upcoming events in preview mode
-	const displayEvents = props.preview ? upcomingEvents.slice(0, 3) : sortedEvents
+	// Sort past events in reverse chronological order
+	pastEvents.reverse()
 
-	return (
-		<div className='events-component'>
-			{props.preview && (
-				<h2 className='events-title'>
-					<Title>Upcoming Events</Title>
+	// For preview mode, show only the first 3 upcoming events
+	const displayEvents = props.preview ? upcomingEvents.slice(0, 3) : undefined
+
+	const EventList = ({ events, title }: { events: Event[]; title?: string }) => (
+		<>
+			{title && (
+				<h2 className='events-title' style={{ marginTop: '2rem' }}>
+					<Title>{title}</Title>
 				</h2>
 			)}
 			<div
@@ -223,7 +236,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 					gap: '1.5rem',
 				}}
 			>
-				{displayEvents.map((event) => (
+				{events.map((event) => (
 					<div
 						key={event.id}
 						className={`event-item ${event.featured ? 'featured' : ''}`}
@@ -350,54 +363,74 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 					</div>
 				))}
 			</div>
+		</>
+	)
 
-			{/* Action buttons */}
-			<div
-				style={{
-					display: 'flex',
-					gap: '1rem',
-					justifyContent: 'center',
-					marginTop: '2rem',
-					flexWrap: 'wrap',
-				}}
-			>
-				{props.preview ? (
-					<Button
-						block={{
-							_type: 'button',
-							text: 'View All Events',
-							url: eventsPageUrl,
-							buttonType: 'text',
-							colorScheme: 'primary',
-							size: 'medium',
-						}}
-					/>
-				) : (
-					hasMoreEvents &&
-					!loadingMore && (
+	return (
+		<div className='events-component'>
+			{props.preview ? (
+				<>
+					<h2 className='events-title'>
+						<Title>Upcoming Events</Title>
+					</h2>
+					<EventList events={displayEvents || []} />
+					<div style={{ textAlign: 'center', marginTop: '2rem' }}>
 						<Button
 							block={{
 								_type: 'button',
-								text: `Load Previous Year (${currentYear - allLoadedYears.length})`,
-								url: '#',
+								text: 'View All Events',
+								url: eventsPageUrl,
 								buttonType: 'text',
 								colorScheme: 'primary',
 								size: 'medium',
-								customStyles: loadingMore
-									? {
-											backgroundColor: { hex: 'var(--secondary)' },
-										}
-									: undefined,
-								onClick: (e) => {
-									e.preventDefault()
-									loadMoreEvents()
-								},
 							}}
 						/>
-					)
-				)}
-				{loadingMore && <Loading size='small' text='Loading previous year...' />}
-			</div>
+					</div>
+				</>
+			) : (
+				<>
+					{upcomingEvents.length > 0 && (
+						<EventList events={upcomingEvents} title='Upcoming Events' />
+					)}
+					<EventList
+						events={pastEvents}
+						title={pastEvents.length > 0 ? 'Past Events' : undefined}
+					/>
+					{/* Action buttons */}
+					<div
+						style={{
+							display: 'flex',
+							gap: '1rem',
+							justifyContent: 'center',
+							marginTop: '2rem',
+							flexWrap: 'wrap',
+						}}
+					>
+						{hasMoreEvents && !loadingMore && (
+							<Button
+								block={{
+									_type: 'button',
+									text: `Load Previous Year (${currentYear - allLoadedYears.length})`,
+									url: '#',
+									buttonType: 'text',
+									colorScheme: 'primary',
+									size: 'medium',
+									customStyles: loadingMore
+										? {
+												backgroundColor: { hex: 'var(--secondary)' },
+											}
+										: undefined,
+									onClick: (e) => {
+										e.preventDefault()
+										loadMoreEvents()
+									},
+								}}
+							/>
+						)}
+						{loadingMore && <Loading size='small' text='Loading previous year...' />}
+					</div>
+				</>
+			)}
 		</div>
 	)
 }
