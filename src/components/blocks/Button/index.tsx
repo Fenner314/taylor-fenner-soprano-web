@@ -20,13 +20,14 @@ interface ButtonProps {
 		ariaLabel?: string
 		onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
 	}
+	styles?: React.CSSProperties
 	type?: 'button' | 'submit' | 'reset'
 }
 
 const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 	// Only keep custom styles that can't be handled by CSS classes
 	const getCustomStyles = () => {
-		const styles: React.CSSProperties = {}
+		const styles: React.CSSProperties = { ...props.styles }
 
 		if (block.customStyles?.backgroundColor) {
 			styles.backgroundColor = block.customStyles.backgroundColor.hex

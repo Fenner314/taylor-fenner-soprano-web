@@ -10,7 +10,12 @@
 	gap: var(--spacing-lg);
 }
 
-/* Individual Event Item */
+.event-wrapper {
+	position: relative;
+	transition: all var(--transition-normal);
+	border-radius: var(--radius-lg);
+}
+
 .event-item {
 	background: var(--white);
 	border-radius: var(--radius-lg);
@@ -22,7 +27,20 @@
 	overflow: hidden;
 }
 
-.event-item:hover {
+.featured-badge {
+	position: absolute;
+	top: -10px;
+	right: 1rem;
+	background: var(--primary);
+	color: white;
+	padding: 0.25rem 0.75rem;
+	border-radius: 12px;
+	font-size: 0.8rem;
+	font-weight: var(--font-weight-semibold);
+	z-index: 10;
+}
+
+.event-wrapper:hover {
 	box-shadow: var(--shadow-md);
 	transform: translateY(-2px);
 }
@@ -44,7 +62,7 @@
 
 /* Featured Event Styling */
 .event-item.featured {
-	background: linear-gradient(135deg, var(--accent), rgba(155, 198, 145, 0.1));
+	/* background: linear-gradient(135deg, var(--accent), rgba(155, 198, 145, 0.1)); */
 	border: 2px solid var(--primary);
 	box-shadow: var(--shadow-md);
 }
@@ -61,18 +79,19 @@
 /* Featured badge */
 .featured-badge {
 	position: absolute;
-	top: -2px;
-	right: var(--spacing-lg);
-	background: var(--primary);
-	color: var(--text-white);
 	padding: var(--spacing-xs) var(--spacing-md);
-	border-radius: 0 0 var(--radius-md) var(--radius-md);
 	font-size: var(--font-size-xs);
 	font-weight: var(--font-weight-semibold);
 	font-family: var(--font-family-headings);
 	text-transform: uppercase;
 	letter-spacing: 0.5px;
 	box-shadow: var(--shadow-sm);
+	top: -10px;
+	right: 1rem;
+	background: var(--primary);
+	color: var(--text-light);
+	border-radius: 12px;
+	z-index: 10;
 }
 
 /* Event Content */
@@ -83,6 +102,12 @@
 	margin-bottom: var(--spacing-md);
 	font-weight: var(--font-weight-semibold);
 	line-height: var(--line-height-tight);
+}
+
+.event-role {
+	font-size: var(--font-size-base);
+	margin-top: -0.75rem;
+	font-weight: var(--font-weight-semibold);
 }
 
 .event-date {

@@ -16,6 +16,9 @@ interface Event {
 	location?: string
 	url?: string
 	featured?: boolean
+	role?: string
+	ensemble?: string
+	extraProps?: string[]
 }
 
 const calendarId = 'primary'
@@ -38,10 +41,19 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 	const [hasMoreEvents, setHasMoreEvents] = useState(true)
 	const [allLoadedYears, setAllLoadedYears] = useState<number[]>([])
 
-	const fetchEventsForYear = async (year: number): Promise<Event[]> => {
+	const fetchEventsForYear = async (
+		year: number,
+		isCurrentYearFirstHalf = false
+	): Promise<Event[]> => {
 		try {
-			const startDate = new Date(year, 5, 1) // June 1st of the year
-			const endDate = new Date(year + 1, 4, 31) // May 31st of next year
+			// For current year first half: Jan 1 to May 31
+			// For all other cases: June 1 to May 31 of next year
+			const startDate = isCurrentYearFirstHalf
+				? new Date(year, 0, 1) // January 1st
+				: new Date(year, 5, 1) // June 1st
+			const endDate = isCurrentYearFirstHalf
+				? new Date(year, 4, 31) // May 31st
+				: new Date(year + 1, 4, 31) // May 31st of next year
 
 			const calendarId = process.env.REACT_APP_GOOGLE_CALENDAR_ID
 			const apiKey = process.env.REACT_APP_GOOGLE_API_KEY
@@ -70,8 +82,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 			}
 
 			const data = await response.json()
-
-			const googleEvents: Event[] =
+			return (
 				data.items?.map((item: any) => {
 					// Parse the description for structured data
 					const description = item.description || ''
@@ -85,6 +96,9 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 					let parsedDescription = description
 					let parsedUrl = ''
 					let featured = false
+					let role = ''
+					let ensemble = ''
+					const extraProps: string[] = []
 
 					lines.forEach((line: any) => {
 						const colonIndex = line.indexOf(':')
@@ -107,6 +121,12 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 								} else {
 									parsedUrl = url
 								}
+							} else if (key === 'role') {
+								role = line.substring(colonIndex + 1).trim()
+							} else if (key === 'ensemble') {
+								ensemble = line.substring(colonIndex + 1).trim()
+							} else {
+								extraProps.push(line)
 							}
 						}
 					})
@@ -119,26 +139,35 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 						description: parsedDescription,
 						location: item.location,
 						url: parsedUrl,
-						featured: featured,
+						featured,
+						role,
+						ensemble,
+						extraProps,
 					}
 				}) || []
-
-			return googleEvents
+			)
 		} catch (err) {
 			console.error(`Error fetching events for ${year}:`, err)
-			throw err // Let the error be handled by the loadEvents function
+			throw err
 		}
 	}
 
-	const loadEvents = async (year: number, append = false) => {
+	const loadEvents = async (
+		year: number,
+		append = false,
+		isCurrentYearFirstHalf = false
+	) => {
 		if (append) {
 			setLoadingMore(true)
 		} else {
 			setLoading(true)
 		}
 
+		// Store the exact scroll position
+		const scrollPosition = window.scrollY
+
 		try {
-			const yearEvents = await fetchEventsForYear(year)
+			const yearEvents = await fetchEventsForYear(year, isCurrentYearFirstHalf)
 
 			if (append) {
 				setEvents((prev) => [...prev, ...yearEvents])
@@ -148,9 +177,18 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 				setAllLoadedYears([year])
 			}
 
-			// Check if there are more events available
-			// We'll keep loading until we hit a year with no events
 			setHasMoreEvents(yearEvents.length > 0)
+
+			// After state updates, restore exact scroll position
+			if (append) {
+				requestAnimationFrame(() => {
+					window.scrollTo({
+						top: scrollPosition,
+						// @ts-ignore
+						behavior: 'instant',
+					})
+				})
+			}
 		} catch (err) {
 			console.error('Failed to load events:', err)
 			setError(err instanceof Error ? err.message : 'Failed to load events')
@@ -162,13 +200,18 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 
 	const loadMoreEvents = async () => {
 		const nextYear = currentYear - allLoadedYears.length
-		if (nextYear >= 2020) {
-			// Don't go before 2020
+
+		// If we haven't loaded first half of current year yet, load that first
+		if (!allLoadedYears.includes(currentYear)) {
+			await loadEvents(currentYear, true, true)
+		} else if (nextYear >= 2020) {
+			// Then start loading previous years
 			await loadEvents(nextYear, true)
 		}
 	}
 
 	useEffect(() => {
+		// Initial load is always June-December of current year
 		loadEvents(currentYear)
 	}, [currentYear, calendarId])
 
@@ -237,129 +280,118 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 				}}
 			>
 				{events.map((event) => (
-					<div
-						key={event.id}
-						className={`event-item ${event.featured ? 'featured' : ''}`}
-					>
-						{event.featured && (
-							<div
-								style={{
-									position: 'absolute',
-									top: '-10px',
-									right: '1rem',
-									background: 'var(--primary)',
-									color: 'white',
-									padding: '0.25rem 0.75rem',
-									borderRadius: '12px',
-									fontSize: '0.8rem',
-									fontWeight: '600',
-								}}
-							>
-								Featured
-							</div>
-						)}
-
-						<h3
-							className='media-title'
-							style={{
-								color: event.featured ? 'var(--accent)' : 'var(--text-dark)',
-								marginBottom: '0.75rem',
-							}}
+					<div className='event-wrapper'>
+						{event.featured && <div className='featured-badge'>Featured</div>}
+						<div
+							key={event.id}
+							className={`event-item ${event.featured ? 'featured' : ''}`}
 						>
-							{event.title}
-						</h3>
-
-						{event.start && (
-							<p
-								style={{
-									color: event.featured ? 'var(--dark)' : 'var(--secondary)',
-									fontWeight: '600',
-									marginBottom: '0.5rem',
-									fontSize: '1rem',
-									display: 'flex',
-									alignItems: 'center',
-									gap: '0.5rem',
-								}}
-							>
-								<img
-									src={calendarIcon}
-									alt='Calendar'
-									style={{
-										width: '16px',
-										height: '16px',
-										objectFit: 'contain',
-									}}
-								/>{' '}
-								{new Date(event.start).toLocaleDateString('en-US', {
-									weekday: 'long',
-									year: 'numeric',
-									month: 'long',
-									day: 'numeric',
-									hour: '2-digit',
-									minute: '2-digit',
-								})}
-								{event.end && (
-									<span style={{ fontSize: '0.9rem', opacity: 0.8 }}>
-										{' - '}
-										{new Date(event.end).toLocaleTimeString('en-US', {
-											hour: '2-digit',
-											minute: '2-digit',
-										})}
-									</span>
-								)}
-							</p>
-						)}
-
-						{event.location && (
-							<p
+							<h3
+								className='media-title'
 								style={{
 									marginBottom: '0.75rem',
-									color: event.featured ? 'var(--dark)' : 'var(--dark)',
-									display: 'flex',
-									alignItems: 'center',
-									gap: '0.5rem',
 								}}
 							>
-								<img
-									src={pinIcon}
-									alt='Location'
+								{event.title}
+							</h3>
+							{event.role && <p className='event-role'>{event.role}</p>}
+							{event.start && (
+								<p
 									style={{
-										width: '16px',
-										height: '16px',
-										objectFit: 'contain',
+										color: event.featured ? 'var(--dark)' : '',
+										fontWeight: '600',
+										marginBottom: '0.5rem',
+										fontSize: '1rem',
+										display: 'flex',
+										alignItems: 'center',
+										gap: '0.5rem',
 									}}
+								>
+									<img
+										src={calendarIcon}
+										alt='Calendar'
+										style={{
+											width: '16px',
+											height: '16px',
+											objectFit: 'contain',
+										}}
+									/>{' '}
+									{new Date(event.start).toLocaleDateString('en-US', {
+										weekday: 'long',
+										year: 'numeric',
+										month: 'long',
+										day: 'numeric',
+										hour: '2-digit',
+										minute: '2-digit',
+									})}
+									{event.end && (
+										<span style={{ fontSize: '0.9rem', opacity: 0.8 }}>
+											{' - '}
+											{new Date(event.end).toLocaleTimeString('en-US', {
+												hour: '2-digit',
+												minute: '2-digit',
+											})}
+										</span>
+									)}
+								</p>
+							)}
+							{event.location && (
+								<p
+									style={{
+										marginBottom: '0.75rem',
+										color: event.featured ? 'var(--dark)' : 'var(--dark)',
+										display: 'flex',
+										alignItems: 'center',
+										gap: '0.5rem',
+									}}
+								>
+									<img
+										src={pinIcon}
+										alt='Location'
+										style={{
+											width: '16px',
+											height: '16px',
+											objectFit: 'contain',
+										}}
+									/>
+									<span>{event.location}</span>
+								</p>
+							)}
+							{event.description && (
+								<p
+									style={{
+										lineHeight: '1.5',
+										color: event.featured ? 'var(--dark)' : 'var(--dark)',
+									}}
+									className='m-0'
+								>
+									{event.description}
+								</p>
+							)}
+							{event.ensemble && (
+								<p className='event-ensemble m-0'>{event.ensemble}</p>
+							)}
+							{event.extraProps &&
+								event.extraProps?.map((prop) => (
+									<p key={prop} className='event-extra-prop m-0'>
+										{prop}
+									</p>
+								))}
+							{event.url && (
+								<Button
+									block={{
+										_type: 'button',
+										text: 'View Details',
+										url: event.url,
+										buttonType: 'outlined',
+										colorScheme: 'primary',
+										size: 'small',
+										openInNewTab: true,
+									}}
+									styles={{ marginTop: '1rem' }}
 								/>
-								<span>
-									<strong>Location:</strong> {event.location}
-								</span>
-							</p>
-						)}
-
-						{event.description && (
-							<p
-								style={{
-									marginBottom: '1rem',
-									lineHeight: '1.5',
-									color: event.featured ? 'var(--dark)' : 'var(--dark)',
-								}}
-							>
-								{event.description}
-							</p>
-						)}
-
-						{event.url && (
-							<Button
-								block={{
-									_type: 'button',
-									text: 'View Details',
-									url: event.url,
-									buttonType: 'outlined',
-									colorScheme: 'primary',
-									size: 'small',
-									openInNewTab: true,
-								}}
-							/>
-						)}
+							)}
+						</div>
 					</div>
 				))}
 			</div>
@@ -406,28 +438,27 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 							flexWrap: 'wrap',
 						}}
 					>
-						{hasMoreEvents && !loadingMore && (
-							<Button
-								block={{
-									_type: 'button',
-									text: `Load Previous Year (${currentYear - allLoadedYears.length})`,
-									url: '#',
-									buttonType: 'text',
-									colorScheme: 'primary',
-									size: 'medium',
-									customStyles: loadingMore
-										? {
-												backgroundColor: { hex: 'var(--secondary)' },
-											}
-										: undefined,
-									onClick: (e) => {
-										e.preventDefault()
-										loadMoreEvents()
-									},
-								}}
-							/>
-						)}
-						{loadingMore && <Loading size='small' text='Loading previous year...' />}
+						<Button
+							block={{
+								_type: 'button',
+								text: !allLoadedYears.includes(currentYear)
+									? 'Load More Events'
+									: `Load Past Events (${currentYear - allLoadedYears.length} - ${currentYear - allLoadedYears.length + 1})`,
+								url: '#',
+								buttonType: 'text',
+								colorScheme: 'primary',
+								size: 'medium',
+								customStyles: loadingMore
+									? {
+											backgroundColor: { hex: 'var(--secondary)' },
+										}
+									: undefined,
+								onClick: (e) => {
+									e.preventDefault()
+									loadMoreEvents()
+								},
+							}}
+						/>
 					</div>
 				</>
 			)}
