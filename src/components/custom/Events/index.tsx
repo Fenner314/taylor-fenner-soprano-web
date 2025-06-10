@@ -75,7 +75,13 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 				data.items?.map((item: any) => {
 					// Parse the description for structured data
 					const description = item.description || ''
-					const lines = description.trim().split('<br>')
+					const lines = description
+						.trim()
+						.split(/<br\/?>/i)
+						.flatMap((part: any) => part.split('\n'))
+						.map((line: any) => line.trim())
+						.filter((line: any) => line.length > 0)
+					console.log('lines', lines)
 					let parsedDescription = description
 					let parsedUrl = ''
 					let featured = false
