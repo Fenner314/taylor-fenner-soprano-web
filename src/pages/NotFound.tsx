@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Button from '../components/blocks/Button'
 
 const NotFound: React.FC = () => {
 	console.log('not found.')
@@ -59,21 +60,16 @@ const NotFound: React.FC = () => {
 				(It's probably just taking a little break somewhere)
 			</p>
 
-			<Link
-				to='/'
-				style={{
-					textDecoration: 'none',
-					backgroundColor: 'var(--primary)',
-					color: 'white',
-					padding: '0.8rem 1.6rem',
-					borderRadius: '20px',
-					fontSize: '1rem',
-					transition: 'transform 0.2s ease',
+			<Button
+				block={{
+					buttonType: 'contained',
+					text: 'Take me home',
+					url: '/',
+					_id: 'take-me-home',
+					size: 'medium',
+					colorScheme: 'primary',
 				}}
-				className='home-button'
-			>
-				Take me home
-			</Link>
+			/>
 
 			{/* Floating dots */}
 			{[...Array(6)].map((_, i) => (

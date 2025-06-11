@@ -1,25 +1,27 @@
 import React from 'react'
 import './Button.css'
 
-interface ButtonProps {
-	block: {
-		_key?: string
-		_id?: string
-		_type: 'button'
-		text: string
-		url: string
-		buttonType?: 'contained' | 'outlined' | 'text'
-		colorScheme?: 'primary' | 'secondary' | 'accent'
-		width?: 'stretch' | 'fit'
-		size?: 'small' | 'medium' | 'large'
-		customStyles?: {
-			backgroundColor?: { hex: string }
-			textColor?: { hex: string }
-		}
-		openInNewTab?: boolean
-		ariaLabel?: string
-		onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
+interface BlockType {
+	_key?: string
+	_id?: string
+	_type?: 'button'
+	text?: string
+	url?: string
+	buttonType?: 'contained' | 'outlined' | 'text'
+	colorScheme?: 'primary' | 'secondary' | 'accent'
+	width?: 'stretch' | 'fit'
+	size?: 'small' | 'medium' | 'large'
+	customStyles?: {
+		backgroundColor?: { hex: string }
+		textColor?: { hex: string }
 	}
+	openInNewTab?: boolean
+	ariaLabel?: string
+	onClick?: (event: React.MouseEvent<HTMLButtonElement>) => void
+}
+
+interface ButtonProps {
+	block: BlockType
 	styles?: React.CSSProperties
 	type?: 'button' | 'submit' | 'reset'
 }
