@@ -6,6 +6,7 @@ import { usePagesContext } from '../../contexts/PagesContext'
 import Loading from '../../components/blocks/Loading'
 import './DynamicPage.css'
 import Title from '../../components/custom/Title'
+import NotFound from '../NotFound'
 
 const DynamicPage: React.FC = () => {
 	const { slug } = useParams<{ slug: string }>()
@@ -52,19 +53,7 @@ const DynamicPage: React.FC = () => {
 	if (!pageData && pages.length > 0) {
 		return (
 			<div className='page-container'>
-				<div
-					className='error'
-					style={{
-						padding: '2rem',
-						textAlign: 'center',
-						color: 'var(--error)',
-						maxWidth: '600px',
-						margin: '0 auto',
-					}}
-				>
-					<h2>Page Not Found</h2>
-					<p>The page you're looking for doesn't exist.</p>
-				</div>
+				<NotFound />
 			</div>
 		)
 	}

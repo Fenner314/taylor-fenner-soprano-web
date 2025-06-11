@@ -78,15 +78,21 @@ const Navigation = () => {
 		item.path === '/' ? path === 'home' : item.path.slice(1) === path
 	)
 
-	const indicatorStyle = isMobile
-		? {
-				left: `${activeIndex * (100 / navItems.length)}%`,
-				width: `${100 / navItems.length}%`,
-			}
+	const isValidPage = activeIndex !== -1
+
+	const indicatorStyle = isValidPage
+		? isMobile
+			? {
+					left: `${activeIndex * (100 / navItems.length)}%`,
+					width: `${100 / navItems.length}%`,
+				}
+			: {
+					top: `calc(50% - ${(navItems.length * 76) / 2}px + ${activeIndex * 76}px)`,
+					height: '64px',
+					'--indicator-height': '64px',
+				}
 		: {
-				top: `calc(50% - ${(navItems.length * 76) / 2}px + ${activeIndex * 76}px)`,
-				height: '64px',
-				'--indicator-height': '64px',
+				display: 'none',
 			}
 
 	return (

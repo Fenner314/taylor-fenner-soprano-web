@@ -14,7 +14,7 @@ import Navigation from './components/Navigation'
 import { PagesProvider } from './contexts/PagesContext'
 import Footer from './components/Footer'
 import Layout from './components/layout/Layout'
-
+import NotFound from './pages/NotFound'
 function App() {
 	useEffect(() => {
 		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
@@ -28,7 +28,7 @@ function App() {
 						<Routes>
 							<Route path='/' element={<DynamicPage />} />
 							<Route path='/:slug' element={<DynamicPage />} />
-							<Route path='*' element={<div className='error'>Page not found</div>} />
+							<Route path='*' element={<NotFound />} />
 						</Routes>
 						<Navigation />
 						<Footer />
