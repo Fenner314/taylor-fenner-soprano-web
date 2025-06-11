@@ -1,4 +1,5 @@
 import React from 'react'
+import { useAnalytics } from '../../../contexts/AnalyticsContext'
 import './Button.css'
 
 interface BlockType {
@@ -27,6 +28,8 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
+	const { trackEvent } = useAnalytics()
+
 	// Only keep custom styles that can't be handled by CSS classes
 	const getCustomStyles = () => {
 		const styles: React.CSSProperties = { ...props.styles }
@@ -42,6 +45,9 @@ const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 	}
 
 	const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
+		// Track the button click
+		trackEvent('Button', 'click', block.text || 'Unnamed Button')
+
 		if (block.onClick) {
 			e.preventDefault()
 			block.onClick(e)
@@ -84,6 +90,7 @@ const Button: React.FC<ButtonProps> = ({ block, ...props }) => {
 				target={block.openInNewTab ? '_blank' : '_self'}
 				rel={block.openInNewTab ? 'noopener noreferrer' : undefined}
 				className={`button-link ${block.width === 'stretch' ? 'stretch' : ''}`}
+				onClick={() => trackEvent('Link', 'click', block.url || 'Unknown URL')}
 			>
 				<button
 					className={`button-element ${block.size || 'medium'}`}
