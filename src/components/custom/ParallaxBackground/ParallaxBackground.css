@@ -1,0 +1,27 @@
+.parallax-back[data-page='home'],
+.parallax-back[data-page='about'] {
+	background: radial-gradient(
+		circle at center,
+		#64091a 0%,
+		#4d0715 40%,
+		#360a10 70%,
+		#1f060b 100%
+	);
+	height: 100vh;
+}
+
+.parallax-back[data-page='about'] {
+	top: 120px !important;
+}
+
+.parallax-back[data-page='home'] > .parallax-bg {
+	max-width: 1200px;
+	max-height: 650px;
+	margin: auto;
+}
+
+.parallax-back[data-page='about'] > .parallax-bg {
+	max-width: 800px;
+	max-height: 736px;
+	margin: auto;
+}

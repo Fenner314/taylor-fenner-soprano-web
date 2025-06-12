@@ -3,7 +3,6 @@
 	width: 100vw;
 	margin-left: calc(-50vw + 50%);
 	overflow: hidden;
-	background-color: var(--bg-gray);
 	padding: 2rem;
 }
 

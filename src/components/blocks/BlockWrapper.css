@@ -1,0 +1,32 @@
+.block-wrapper {
+	padding: var(--spacing-xl);
+	width: 100%;
+}
+
+.block-wrapper.full-width {
+	max-width: none;
+}
+
+/* Special handling for specific block types */
+.block-wrapper[data-block-type='hero'],
+.block-wrapper[data-block-type='blockBanner'] {
+	margin: 0;
+	max-width: none;
+}
+
+.block-wrapper[data-block-type='blockContent'] {
+	margin: auto;
+}
+
+/* Responsive adjustments */
+@media (min-width: 768px) {
+	.block-wrapper {
+		padding-left: var(--spacing-xl);
+		padding-right: var(--spacing-xl);
+	}
+
+	.block-wrapper.full-width {
+		padding-top: var(--spacing-xl);
+		padding-bottom: var(--spacing-xl);
+	}
+}

@@ -11,12 +11,24 @@ interface PageData {
 	index: number
 }
 
+interface ParallaxSection {
+	id: string
+	page?: string
+	component: React.ReactNode
+	position: number // viewport height offset (e.g., 0 for first hero, 150 for second section)
+}
+
 interface PagesContextType {
 	pages: PageData[]
 	currentPage: PageData | null
 	isLoading: boolean
 	error: string | null
 	lastUpdated?: string
+	// Parallax functionality
+	parallaxSections: ParallaxSection[]
+	registerParallaxSection: (section: ParallaxSection) => void
+	unregisterParallaxSection: (id: string) => void
+	clearParallaxSections: () => void
 }
 
 const CACHE_KEY = 'pages_cache'
@@ -29,6 +41,10 @@ const PagesContext = createContext<PagesContextType>({
 	currentPage: null,
 	isLoading: true,
 	error: null,
+	parallaxSections: [],
+	registerParallaxSection: () => {},
+	unregisterParallaxSection: () => {},
+	clearParallaxSections: () => {},
 })
 
 export const usePagesContext = () => useContext(PagesContext)
@@ -47,6 +63,13 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
 	const [lastUpdated, setLastUpdated] = useState<string>(() => {
 		return localStorage.getItem(CACHE_TIMESTAMP_KEY) || ''
 	})
+
+	// Parallax state
+	const [parallaxSections, setParallaxSections] = useState<ParallaxSection[]>([])
+
+	useEffect(() => {
+		console.log({ parallaxSections })
+	}, [parallaxSections])
 
 	const saveToCache = (data: PageData[]) => {
 		try {
@@ -118,6 +141,23 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
 		}
 	}
 
+	// Parallax functions
+	const registerParallaxSection = (section: ParallaxSection) => {
+		setParallaxSections((prev) => {
+			// Remove any existing section with the same id, then add the new one
+			const filtered = prev.filter((s) => s.id !== section.id)
+			return [...filtered, section].sort((a, b) => a.position - b.position)
+		})
+	}
+
+	const unregisterParallaxSection = (id: string) => {
+		setParallaxSections((prev) => prev.filter((s) => s.id !== id))
+	}
+
+	const clearParallaxSections = () => {
+		setParallaxSections([])
+	}
+
 	useEffect(() => {
 		const initializeData = async () => {
 			// Check if we have valid cached data
@@ -156,6 +196,10 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
 		isLoading,
 		error,
 		lastUpdated,
+		parallaxSections,
+		registerParallaxSection,
+		unregisterParallaxSection,
+		clearParallaxSections,
 	}
 
 	return <PagesContext.Provider value={value}>{children}</PagesContext.Provider>

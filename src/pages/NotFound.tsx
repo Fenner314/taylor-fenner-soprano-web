@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom'
 import Button from '../components/blocks/Button'
 
 const NotFound: React.FC = () => {
-	console.log('not found.')
-
 	return (
 		<div
 			className='not-found-container'

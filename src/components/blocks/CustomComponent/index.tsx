@@ -25,7 +25,6 @@ const CustomComponent: React.FC<CustomComponentProps> = ({ block }) => {
 	}
 
 	let componentProps = {}
-	console.log({ block })
 	if (block.props) {
 		try {
 			componentProps = JSON.parse(block.props)

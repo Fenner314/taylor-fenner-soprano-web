@@ -1,4 +1,8 @@
 /* Hero Block Styles */
+.block-wrapper[data-label='about-hero'] {
+	padding: 0 !important;
+}
+
 .hero-section {
 	position: relative;
 	width: 100vw;
@@ -14,8 +18,8 @@
 	overflow: hidden;
 }
 
-.hero-section[data-page='home-hero'],
-.hero-section[data-page='about-hero'] {
+.hero-section[data-page='home-hero']:not(.parallax),
+.hero-section[data-page='about-hero']:not(.parallax) {
 	background-color: var(--primary);
 	background: radial-gradient(
 		circle at center,

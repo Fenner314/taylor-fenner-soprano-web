@@ -13,6 +13,7 @@ interface HeroProps {
 		text?: any
 		image?: any
 		label?: string
+		parallax?: boolean
 	}
 }
 
@@ -20,10 +21,10 @@ const Hero: React.FC<HeroProps> = ({ block }) => {
 	return (
 		<div
 			key={block._key || block._id}
-			className='hero-section'
+			className={`hero-section ${block.parallax ? 'parallax' : ''}`}
 			data-page={block.label}
 		>
-			{block.image && (
+			{block.image && !block.parallax && (
 				<img
 					src={urlForImage(block.image).url()}
 					alt={block.title || 'Hero image'}

@@ -11,35 +11,63 @@ import './App.css'
 
 import DynamicPage from './pages/DynamicPage'
 import Navigation from './components/Navigation'
-import { PagesProvider } from './contexts/PagesContext'
+import { PagesProvider, usePagesContext } from './contexts/PagesContext'
 import { AnalyticsProvider } from './contexts/AnalyticsContext'
 import Footer from './components/Footer'
 import Layout from './components/layout/Layout'
 import NotFound from './pages/NotFound'
 
 function App() {
-	useEffect(() => {
-		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
-	}, [])
-
 	return (
 		<PagesProvider>
 			<Router>
 				<AnalyticsProvider>
-					<div className='App'>
-						<Layout>
-							<Routes>
-								<Route path='/' element={<DynamicPage />} />
-								<Route path='/:slug' element={<DynamicPage />} />
-								<Route path='*' element={<NotFound />} />
-							</Routes>
-							<Navigation />
-							<Footer />
-						</Layout>
-					</div>
+					<AppContent />
 				</AnalyticsProvider>
 			</Router>
 		</PagesProvider>
+	)
+}
+
+const AppContent = () => {
+	const { parallaxSections } = usePagesContext()
+
+	useEffect(() => {
+		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
+	}, [])
+
+	useEffect(() => {
+		console.log('parallaxSections here', parallaxSections)
+	}, [parallaxSections])
+
+	return (
+		<div className='App'>
+			<Navigation />
+			<div className='parallax-container'>
+				{parallaxSections.map((section) => {
+					return (
+						<div
+							key={section.id}
+							className='parallax-layer parallax-back'
+							style={{ top: `${section.position}vh` }}
+							data-page={section.page}
+						>
+							{section.component}
+						</div>
+					)
+				})}
+				<div className='parallax-layer parallax-front'>
+					<Layout>
+						<Routes>
+							<Route path='/' element={<DynamicPage />} />
+							<Route path='/:slug' element={<DynamicPage />} />
+							<Route path='*' element={<NotFound />} />
+						</Routes>
+						<Footer />
+					</Layout>
+				</div>
+			</div>
+		</div>
 	)
 }
 

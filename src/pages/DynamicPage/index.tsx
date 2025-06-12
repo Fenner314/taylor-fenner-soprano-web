@@ -7,10 +7,20 @@ import Loading from '../../components/blocks/Loading'
 import './DynamicPage.css'
 import Title from '../../components/custom/Title'
 import NotFound from '../NotFound'
+import Hero from '../../components/blocks/Hero'
+import ParallaxBackground from '../../components/custom/ParallaxBackground'
 
 const DynamicPage: React.FC = () => {
 	const { slug } = useParams<{ slug: string }>()
-	const { pages, isLoading, error, lastUpdated } = usePagesContext()
+	const {
+		pages,
+		isLoading,
+		error,
+		lastUpdated,
+		parallaxSections,
+		clearParallaxSections,
+		registerParallaxSection,
+	} = usePagesContext()
 	const location = useLocation()
 
 	useEffect(() => {
@@ -20,6 +30,36 @@ const DynamicPage: React.FC = () => {
 	// Find the current page from the loaded pages
 	const currentSlug = slug ? `/${slug}` : '/'
 	const pageData = pages.find((page) => page.slug.current === currentSlug)
+
+	useEffect(() => {
+		clearParallaxSections()
+
+		if (!pageData) return
+
+		let currentPosition = 0
+
+		pageData.content?.forEach((block, index) => {
+			console.log(block)
+			// Register parallax sections based on block type
+			if (
+				(block._type === 'hero' && block.parallax) ||
+				block._type === 'parallax'
+			) {
+				registerParallaxSection({
+					id: `${pageData.slug.current}-${block._key || index}`,
+					page:
+						pageData.slug.current === '/'
+							? 'home'
+							: pageData.slug.current.replace('/', ''),
+					component: <ParallaxBackground block={block} />,
+					position: currentPosition,
+				})
+
+				// Calculate next position based on content height
+				currentPosition += block._type === 'hero' ? 100 : 60 // vh units
+			}
+		})
+	}, [pageData])
 
 	if ((isLoading && !lastUpdated) || pages.length === 0) {
 		return (

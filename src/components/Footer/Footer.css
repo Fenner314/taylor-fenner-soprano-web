@@ -29,9 +29,14 @@
 	z-index: 1;
 }
 
-.footer-underline {
+.footer-title::before {
+	content: '';
+	height: 12px;
+	background-color: rgba(var(--secondary-rgb), 0.6);
+	position: absolute;
 	width: 100%;
 	bottom: 19px;
+	left: 0;
 	z-index: 0;
 }
 

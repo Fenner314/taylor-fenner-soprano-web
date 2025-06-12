@@ -92,7 +92,6 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 						.flatMap((part: any) => part.split('\n'))
 						.map((line: any) => line.trim())
 						.filter((line: any) => line.length > 0)
-					console.log('lines', lines)
 					let parsedDescription = description
 					let parsedUrl = ''
 					let featured = false

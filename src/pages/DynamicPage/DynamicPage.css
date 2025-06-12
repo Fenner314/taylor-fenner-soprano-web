@@ -1,7 +1,6 @@
 /* Dynamic Page Layout Styles */
 .page-container {
 	min-height: 100vh;
-	padding: 0 0.5rem 80px;
 }
 
 .page-title {
@@ -16,7 +15,6 @@
 .page-builder-content {
 	display: flex;
 	flex-direction: column;
-	gap: var(--spacing-2xl);
 	max-width: 100%;
 	width: 100%;
 }
@@ -47,6 +45,7 @@
 	font-family: var(--font-family-serif);
 	line-height: var(--line-height-relaxed);
 	max-width: 105ch;
+	margin: auto;
 }
 
 .rich-text h1,
@@ -120,24 +119,18 @@
 /* Responsive adjustments */
 @media (min-width: 640px) {
 	.page-container {
-		padding: 0 var(--spacing-lg) 80px;
+		margin: 0 auto;
 	}
 }
 
 @media (min-width: 768px) {
 	.page-container {
-		padding: 0 var(--spacing-xl) 80px;
-		max-width: 1200px;
 		margin: 0 auto;
-	}
-
-	.page-builder-content {
-		gap: var(--spacing-2xl);
 	}
 }
 
 @media (min-width: 1024px) {
 	.page-container {
-		padding: 0 var(--spacing-2xl) 80px;
+		margin: 0 auto;
 	}
 }
