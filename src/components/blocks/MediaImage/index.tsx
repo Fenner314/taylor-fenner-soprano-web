@@ -1,6 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { urlForImage } from '../../../lib/sanity'
 import './MediaImage.css'
+import { parseCustomCSS } from '../../../utils/parseCustomCSS'
 
 interface MediaImageProps {
 	block: {
@@ -15,7 +16,9 @@ interface MediaImageProps {
 				url: string
 			}
 		}
-		styles?: string
+		styles?: {
+			customCSS?: string
+		}
 		description?: string
 		organization?: string
 		role?: string
@@ -44,9 +47,9 @@ const MediaImage: React.FC<MediaImageProps> = ({
 
 	// Parse custom styles
 	const customStyles = React.useMemo(() => {
-		if (!block.styles) return {}
+		if (!block.styles?.customCSS) return {}
 		try {
-			return JSON.parse(block.styles)
+			return parseCustomCSS(block.styles.customCSS)
 		} catch (err) {
 			console.warn('Failed to parse custom styles:', err)
 			return {}

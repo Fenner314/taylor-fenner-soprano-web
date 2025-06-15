@@ -8,19 +8,21 @@ import {
 } from 'react-router-dom'
 import emailjs from '@emailjs/browser'
 import './App.css'
+import ScrollToTop from './components/ScrollToTop'
 
 import DynamicPage from './pages/DynamicPage'
 import Navigation from './components/Navigation'
 import { PagesProvider, usePagesContext } from './contexts/PagesContext'
 import { AnalyticsProvider } from './contexts/AnalyticsContext'
+import NotFound from './pages/NotFound'
 import Footer from './components/Footer'
 import Layout from './components/layout/Layout'
-import NotFound from './pages/NotFound'
 
 function App() {
 	return (
 		<PagesProvider>
 			<Router>
+				<ScrollToTop />
 				<AnalyticsProvider>
 					<AppContent />
 				</AnalyticsProvider>
@@ -43,7 +45,7 @@ const AppContent = () => {
 	return (
 		<div className='App'>
 			<Navigation />
-			<div className='parallax-container'>
+			<div className='parallax-container' id='parallax-container'>
 				{parallaxSections.map((section) => {
 					return (
 						<div
