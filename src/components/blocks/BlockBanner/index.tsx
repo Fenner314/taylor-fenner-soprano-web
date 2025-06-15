@@ -44,8 +44,11 @@ const BlockBanner: React.FC<BlockBannerProps> = ({ block }) => {
 			const banner = bannerRef.current
 			if (!banner) return
 
-			const title = banner.getAttribute('data-page')
-			if (title === 'home-blockBanner' || title === 'biography-blockBanner') {
+			const title = banner.getAttribute('data-label')
+			if (
+				title === 'home-blockBanner-inner' ||
+				title === 'biography-blockBanner-inner'
+			) {
 				const height = banner.offsetHeight
 				banner.style.marginTop = `calc(-1 * (var(--spacing-2xl) + ${height * 0.25}px))`
 			}
@@ -66,7 +69,7 @@ const BlockBanner: React.FC<BlockBannerProps> = ({ block }) => {
 			ref={bannerRef}
 			key={block._key || block._id}
 			className='block-banner'
-			data-page={block.label}
+			data-label={`${block.label}-inner`}
 		>
 			{block.text?.content && (
 				<div className='rich-text'>

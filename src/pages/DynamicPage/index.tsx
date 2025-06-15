@@ -115,7 +115,7 @@ const DynamicPage: React.FC = () => {
 		<div className='page-container' data-page={pageData.title?.toLowerCase()}>
 			{pageData.title !== 'Home' &&
 				pageData.title !== 'Events' &&
-				pageData.title && <Title>{pageData.title}</Title>}
+				pageData.title && <Title block={pageData}>{pageData.title}</Title>}
 
 			{/* Sanity page builder content */}
 			{pageData.content && pageData.content.length > 0 && (

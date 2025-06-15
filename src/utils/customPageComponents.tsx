@@ -3,9 +3,11 @@ import React from 'react'
 // Import your custom page components
 import ContactForm from '../components/custom/ContactForm'
 import Events from '../components/custom/Events'
+import { BlockBase } from '../types/sanity'
 
 export interface CustomComponentProps {
 	title?: string
+	block?: BlockBase
 	[key: string]: any
 }
 

@@ -1,11 +1,15 @@
 .title-container {
 	position: relative;
 	text-align: left;
-	padding: 2rem;
+	padding: 2rem 0;
 }
 
 .title-container[data-page='Biography'] {
 	background-color: var(--bg-light);
+}
+
+.title-container:not([data-label='events-component']) {
+	padding-left: 2rem;
 }
 
 .highlighted-title {

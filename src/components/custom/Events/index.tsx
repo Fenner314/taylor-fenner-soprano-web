@@ -24,7 +24,11 @@ interface Event {
 const calendarId = 'primary'
 const eventsPageUrl = '/events'
 
-const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
+const EventsComponent: React.FC<CustomComponentProps> = ({
+	title,
+	props,
+	block,
+}) => {
 	const [events, setEvents] = useState<Event[]>([])
 	const [loading, setLoading] = useState(true)
 	const [loadingMore, setLoadingMore] = useState(false)
@@ -266,8 +270,8 @@ const EventsComponent: React.FC<CustomComponentProps> = ({ title, props }) => {
 	const EventList = ({ events, title }: { events: Event[]; title?: string }) => (
 		<>
 			{title && (
-				<h2 className='events-title' style={{ marginTop: '2rem' }}>
-					<Title>{title}</Title>
+				<h2 className='events-title'>
+					<Title block={block}>{title}</Title>
 				</h2>
 			)}
 			<div

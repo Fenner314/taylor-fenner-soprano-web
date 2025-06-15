@@ -47,7 +47,11 @@ const renderBlock = (block: any) => {
 					}
 				}
 				return CustomComponent ? (
-					<CustomComponent title={block.title} props={componentProps} />
+					<CustomComponent
+						title={block.title}
+						props={componentProps}
+						block={block}
+					/>
 				) : null
 
 			default:
