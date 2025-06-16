@@ -66,7 +66,6 @@ const renderBlock = (block: any) => {
 	// Determine if block should be full width
 	const fullWidth = ['hero', 'blockBanner'].includes(block._type)
 
-	console.log(block)
 	return (
 		<BlockWrapper
 			key={block._key || block._id}

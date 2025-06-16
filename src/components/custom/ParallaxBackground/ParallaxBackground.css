@@ -10,10 +10,6 @@
 	height: 100vh;
 }
 
-.parallax-back[data-page='about'] {
-	top: 120px !important;
-}
-
 .parallax-back[data-page='home'] > .parallax-bg {
 	max-width: 1200px;
 	max-height: 650px;

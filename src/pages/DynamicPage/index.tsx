@@ -36,27 +36,20 @@ const DynamicPage: React.FC = () => {
 
 		if (!pageData) return
 
-		let currentPosition = 0
-
 		pageData.content?.forEach((block, index) => {
-			console.log(block)
 			// Register parallax sections based on block type
 			if (
 				(block._type === 'hero' && block.parallax) ||
 				block._type === 'parallax'
 			) {
 				registerParallaxSection({
-					id: `${pageData.slug.current}-${block._key || index}`,
+					id: block._key || index,
 					page:
 						pageData.slug.current === '/'
 							? 'home'
 							: pageData.slug.current.replace('/', ''),
 					component: <ParallaxBackground block={block} />,
-					position: currentPosition,
 				})
-
-				// Calculate next position based on content height
-				currentPosition += block._type === 'hero' ? 100 : 60 // vh units
 			}
 		})
 	}, [pageData])

@@ -1,8 +1,7 @@
-import React from 'react'
-import { PortableText } from '@portabletext/react'
+import React, { useEffect } from 'react'
 import { urlForImage } from '../../../lib/sanity'
-import { portableTextComponents } from '../../../utils/portableTextComponents'
 import './Hero.css'
+import { usePagesContext } from '../../../contexts/PagesContext'
 
 interface HeroProps {
 	block: {
@@ -18,9 +17,24 @@ interface HeroProps {
 }
 
 const Hero: React.FC<HeroProps> = ({ block }) => {
+	const { updateParallaxSectionPosition } = usePagesContext()
+
+	useEffect(() => {
+		setTimeout(() => {
+			if (block.parallax && block._key) {
+				const element = document.getElementById(block._key)
+
+				if (element) {
+					updateParallaxSectionPosition(block._key, element.offsetTop)
+				}
+			}
+		})
+	}, [block._key])
+
 	return (
 		<div
 			key={block._key || block._id}
+			id={block._key}
 			className={`hero-section ${block.parallax ? 'parallax' : ''}`}
 			data-page={block.label}
 		>

@@ -38,10 +38,6 @@ const AppContent = () => {
 		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
 	}, [])
 
-	useEffect(() => {
-		console.log('parallaxSections here', parallaxSections)
-	}, [parallaxSections])
-
 	return (
 		<div className='App'>
 			<Navigation />
@@ -51,7 +47,7 @@ const AppContent = () => {
 						<div
 							key={section.id}
 							className='parallax-layer parallax-back'
-							style={{ top: `${section.position}vh` }}
+							style={{ top: `${section.position}px` }}
 							data-page={section.page}
 						>
 							{section.component}

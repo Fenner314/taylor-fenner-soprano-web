@@ -8,7 +8,6 @@ interface TitleProps {
 }
 
 const Title: React.FC<TitleProps> = ({ block, children }) => {
-	console.log(block)
 	return (
 		<div
 			className='title-container'
