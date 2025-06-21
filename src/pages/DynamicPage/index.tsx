@@ -9,8 +9,6 @@ import Title from '../../components/custom/Title'
 import NotFound from '../NotFound'
 import Hero from '../../components/blocks/Hero'
 import ParallaxBackground from '../../components/custom/ParallaxBackground'
-import Section from '../../components/blocks/Section'
-import BrandTitle from '../../components/custom/BrandTitle'
 
 const DynamicPage: React.FC = () => {
 	const { slug } = useParams<{ slug: string }>()
@@ -106,115 +104,20 @@ const DynamicPage: React.FC = () => {
 		? getCustomPageComponent(pageData.customComponent)
 		: null
 
-	// Helper to render blocks recursively
-	const renderPageBlock = (
-		block: any,
-		index: number,
-		arr: any[],
-		context: { isInMediaGrid?: boolean } = {}
-	) => {
-		// Look for a section after the hero
-		const next = arr && arr[index + 1]
-		// Look for a section before the hero
-		const prev = arr && arr[index - 1]
-
-		if (block._type === 'hero') {
-			const hasNextAngled = next?._type === 'section' && next.angled
-			const hasPrevAngled = prev?._type === 'section' && prev.angled
-
-			if (hasNextAngled && hasPrevAngled) {
-				// Hero has both top and bottom angles
-				return (
-					<Hero
-						key={block._key || block._id || index}
-						block={block}
-						angled={true}
-						anglePosition='both'
-						topAngleColor={
-							prev.backgroundColor || prev.sectionColor || 'var(--primary)'
-						}
-						bottomAngleColor={
-							next.backgroundColor || next.sectionColor || 'var(--primary)'
-						}
-					/>
-				)
-			} else if (hasNextAngled) {
-				// Hero has only bottom angle
-				return (
-					<Hero
-						key={block._key || block._id || index}
-						block={block}
-						angled={true}
-						anglePosition='bottom-left'
-						angleColor={next.backgroundColor || next.sectionColor || 'var(--primary)'}
-					/>
-				)
-			} else if (hasPrevAngled) {
-				// Hero has only top angle
-				return (
-					<Hero
-						key={block._key || block._id || index}
-						block={block}
-						angled={true}
-						anglePosition='top-right'
-						angleColor={prev.backgroundColor || prev.sectionColor || 'var(--primary)'}
-					/>
-				)
-			}
-			return <Hero key={block._key || block._id || index} block={block} />
-		}
-
-		if (block._type === 'section') {
-			// Find next and previous sections
-			const next = arr && arr[index + 1]
-			const prev = arr && arr[index - 1]
-
-			// Only show bottom overlay if this section is angled and the next is angled
-			const showBottomOverlay =
-				block.angled && next?._type === 'section' && next.angled
-			// Only show top overlay if this section is angled and the previous is angled, and the previous is NOT also angled (so no double overlay)
-			const showTopOverlay =
-				block.angled &&
-				prev?._type === 'section' &&
-				prev.angled &&
-				!(prev.angled && block.angled)
-
-			return (
-				<Section
-					key={block._key || block._id || index}
-					block={block}
-					nextSectionAngled={showBottomOverlay}
-					nextSectionColor={next?.backgroundColor || next?.sectionColor || undefined}
-					prevSectionAngled={showTopOverlay}
-					prevSectionColor={prev?.backgroundColor || prev?.sectionColor || undefined}
-				>
-					{block.content &&
-						block.content.length > 0 &&
-						block.content.map((child: any, childIdx: number, childArr: any[]) =>
-							renderPageBlock(child, childIdx, childArr, context)
-						)}
-				</Section>
-			)
-		}
-
-		// Use renderBlock for all other block types
-		return (
-			<React.Fragment key={block._key || block._id || index}>
-				{renderBlock(block, context)}
-			</React.Fragment>
-		)
-	}
-
 	return (
 		<div className='page-container' data-page={pageData.title?.toLowerCase()}>
-			{pageData.title === 'Home' && <BrandTitle />}
+			{pageData.title !== 'Home' &&
+				pageData.title !== 'Events' &&
+				pageData.title && <Title block={pageData}>{pageData.title}</Title>}
 
 			{/* Sanity page builder content */}
 			{pageData.content && pageData.content.length > 0 && (
 				<div className='page-builder-content'>
-					{pageData.content.map((block, index, arr) =>
-						renderPageBlock(block, index, arr, {})
-					)}
+					{pageData.content.map((block, index) => (
+						<React.Fragment key={block._key || block._id || index}>
+							{renderBlock(block)}
+						</React.Fragment>
+					))}
 				</div>
 			)}
 

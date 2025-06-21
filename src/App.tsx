@@ -40,7 +40,7 @@ const AppContent = () => {
 
 	return (
 		<div className='App'>
-			{/* <Navigation /> */}
+			<Navigation />
 			<div className='parallax-container' id='parallax-container'>
 				{parallaxSections.map((section) => {
 					return (

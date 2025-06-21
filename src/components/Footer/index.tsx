@@ -5,7 +5,6 @@ import { ReactComponent as FacebookIcon } from '../../assets/icons/facebook.svg'
 import { ReactComponent as InstagramIcon } from '../../assets/icons/logo-instagram.svg'
 import { ReactComponent as LinkedInIcon } from '../../assets/icons/logo-linkedin.svg'
 import { ReactComponent as YouTubeIcon } from '../../assets/icons/logo-youtube.svg'
-import BrandTitle from '../custom/BrandTitle'
 
 const Footer: React.FC = () => {
 	const currentYear = new Date().getFullYear()
@@ -14,10 +13,13 @@ const Footer: React.FC = () => {
 		<footer className='footer'>
 			<div className='footer-content'>
 				<div className='footer-main'>
-					<BrandTitle isMainTitle={false} />
+					<div className='footer-title'>
+						<h1>Taylor Fenner</h1>
+						<div className='underline footer-underline'></div>
+					</div>
 					<div className='social-links'>
 						<a
-							href='https://www.facebook.com/christopher.r.rodriguez.14'
+							href='https://www.facebook.com/taylorthesoprano'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='Facebook'
@@ -25,7 +27,7 @@ const Footer: React.FC = () => {
 							<FacebookIcon />
 						</a>
 						<a
-							href='https://www.instagram.com/christopherbriggs/'
+							href='https://www.instagram.com/taylorthesoprano'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='Instagram'
@@ -40,18 +42,18 @@ const Footer: React.FC = () => {
 						>
 							<LinkedInIcon />
 						</a> */}
-						{/* <a
+						<a
 							href='https://www.youtube.com/@taylorthesoprano5587'
 							target='_blank'
 							rel='noopener noreferrer'
 							aria-label='YouTube'
 						>
 							<YouTubeIcon />
-						</a> */}
+						</a>
 					</div>
 				</div>
 				<div className='footer-copyright'>
-					<p>&copy; Christopher Rodriguez {currentYear}. All rights reserved.</p>
+					<p>&copy; Taylor Fenner {currentYear}. All rights reserved.</p>
 					<p>
 						Website created by{' '}
 						<span className='fenner-studios'>

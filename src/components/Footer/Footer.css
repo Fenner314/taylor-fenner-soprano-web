@@ -1,7 +1,7 @@
 .footer {
 	width: 100%;
 	padding: 2rem;
-	background-color: var(--bg-dark);
+	background-color: var(--bg-gray);
 	border-top: 1px solid var(--bg-gray-light);
 }
 
@@ -69,19 +69,6 @@
 .footer-copyright p {
 	margin: 0;
 	line-height: 1.5;
-	font-size: var(--font-size-md);
-}
-
-.ionicon {
-	fill: currentColor;
-	stroke: currentColor;
-	color: currentColor;
-}
-
-.ionicon path {
-	fill: currentColor;
-	stroke: currentColor;
-	color: currentColor;
 }
 
 @media (max-width: 768px) {

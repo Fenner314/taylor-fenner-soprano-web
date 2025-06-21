@@ -1,3 +1,4 @@
+/* Dynamic Page Layout Styles */
 .page-container {
 	min-height: 100vh;
 }
@@ -8,7 +9,6 @@
 	margin-bottom: var(--spacing-xl);
 	text-align: center;
 	font-family: var(--font-family-headings);
-	font-style: italic;
 	font-weight: var(--font-weight-bold);
 }
 
@@ -44,7 +44,8 @@
 .rich-text {
 	font-family: var(--font-family-serif);
 	line-height: var(--line-height-relaxed);
-	max-width: 95ch;
+	max-width: 105ch;
+	margin: auto;
 }
 
 .rich-text h1,
@@ -70,6 +71,7 @@
 
 .rich-text p {
 	margin-bottom: var(--spacing-md);
+	color: var(--text-dark);
 }
 
 .rich-text a {

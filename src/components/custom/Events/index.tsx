@@ -271,7 +271,7 @@ const EventsComponent: React.FC<CustomComponentProps> = ({
 		<>
 			{title && (
 				<h2 className='events-title'>
-					<Title block={block ?? ({} as any)}>{title}</Title>
+					<Title block={block}>{title}</Title>
 				</h2>
 			)}
 			<div

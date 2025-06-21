@@ -14,21 +14,9 @@ interface HeroProps {
 		label?: string
 		parallax?: boolean
 	}
-	angled?: boolean
-	anglePosition?: 'bottom-left' | 'top-right' | 'both'
-	angleColor?: string
-	topAngleColor?: string
-	bottomAngleColor?: string
 }
 
-const Hero: React.FC<HeroProps> = ({
-	block,
-	angled = false,
-	anglePosition,
-	angleColor,
-	topAngleColor,
-	bottomAngleColor,
-}) => {
+const Hero: React.FC<HeroProps> = ({ block }) => {
 	const { updateParallaxSectionPosition } = usePagesContext()
 
 	useEffect(() => {
@@ -50,25 +38,6 @@ const Hero: React.FC<HeroProps> = ({
 			className={`hero-section ${block.parallax ? 'parallax' : ''}`}
 			data-page={block.label}
 		>
-			{/* Angled overlay logic */}
-			{angled && anglePosition === 'both' && topAngleColor && bottomAngleColor && (
-				<>
-					<div
-						className='hero-angled-overlay top-right'
-						style={{ backgroundColor: topAngleColor }}
-					/>
-					<div
-						className='hero-angled-overlay bottom-left'
-						style={{ backgroundColor: bottomAngleColor }}
-					/>
-				</>
-			)}
-			{angled && anglePosition && anglePosition !== 'both' && angleColor && (
-				<div
-					className={`hero-angled-overlay ${anglePosition}`}
-					style={{ backgroundColor: angleColor }}
-				/>
-			)}
 			{block.image && !block.parallax && (
 				<img
 					src={urlForImage(block.image).url()}
