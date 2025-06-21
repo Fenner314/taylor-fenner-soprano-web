@@ -95,7 +95,6 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 	return (
 		<div className='custom-contact-form'>
 			<div className='cta-section'>
-				<h3>Get in Touch</h3>
 				{status.type && (
 					<div
 						className={`form-message ${status.type}`}
@@ -149,7 +148,7 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 							disabled={isSubmitting}
 						/>
 					</div>
-					<div style={{ marginBottom: '1rem' }}>
+					<div>
 						<ReCAPTCHA
 							ref={recaptchaRef}
 							size='invisible'
@@ -166,7 +165,7 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 									: 'Send Message',
 							url: '#',
 							buttonType: 'contained',
-							colorScheme: 'primary',
+							colorScheme: 'secondary',
 							size: 'medium',
 							customStyles:
 								isVerifying || isSubmitting

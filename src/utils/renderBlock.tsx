@@ -8,8 +8,18 @@ import MediaGrid from '../components/blocks/MediaGrid'
 import VideoRecording from '../components/blocks/VideoRecording'
 import BlockWrapper from '../components/blocks/BlockWrapper'
 import { getCustomPageComponent } from './customPageComponents'
+import Column from '../components/blocks/Column'
+import Gallery from '../components/blocks/Gallery'
+import Testimonial from '../components/blocks/Testimonial'
+import TextBlock from '../components/blocks/TextBlock'
+import YoutubeVideo from '../components/blocks/YoutubeVideo'
+import Title from '../components/custom/Title'
 
-const renderBlock = (block: any) => {
+interface RenderContext {
+	isInMediaGrid?: boolean
+}
+
+const renderBlock = (block: any, context: RenderContext = {}) => {
 	const renderContent = () => {
 		switch (block._type) {
 			case 'hero':
@@ -28,7 +38,7 @@ const renderBlock = (block: any) => {
 				return <Button block={block} />
 
 			case 'mediaImage':
-				return <MediaImage block={block} />
+				return <MediaImage block={block} isInMediaGrid={context.isInMediaGrid} />
 
 			case 'mediaGrid':
 				return <MediaGrid block={block} />
@@ -37,7 +47,7 @@ const renderBlock = (block: any) => {
 				return <VideoRecording block={block} />
 
 			case 'customComponent':
-				const CustomComponent = getCustomPageComponent(block.component)
+				const CustomComponent = getCustomPageComponent(block.componentName)
 				let componentProps = {}
 				if (block.props) {
 					try {
@@ -53,6 +63,19 @@ const renderBlock = (block: any) => {
 						block={block}
 					/>
 				) : null
+
+			case 'column':
+				return <Column block={block} />
+			case 'gallery':
+				return <Gallery block={block} />
+			case 'testimonial':
+				return <Testimonial block={block} />
+			case 'title':
+				return <Title block={block} />
+			case 'textBlock':
+				return <TextBlock block={block} />
+			case 'youtubeVideo':
+				return <YoutubeVideo block={block} />
 
 			default:
 				console.warn(`Unknown block type: ${block._type}`)

@@ -71,10 +71,6 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
 	// Parallax state
 	const [parallaxSections, setParallaxSections] = useState<ParallaxSection[]>([])
 
-	useEffect(() => {
-		console.log({ parallaxSections })
-	}, [parallaxSections])
-
 	const findParallaxSection = (id: string) => {
 		return parallaxSections.find((section) => section.id === id)
 	}
@@ -118,7 +114,10 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
                         ...*[_type == "mediaImage" && _id == ^._ref][0]{
                             title,
                             image,
+                            alt,
                             styles,
+                            width,
+                            borderRadius,
                             description,
                             organization,
                             role,
@@ -169,29 +168,14 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
 	}
 
 	const updateParallaxSectionPosition = (id: string, position: number) => {
-		console.log(
-			'Before update - Current sections:',
-			JSON.stringify(parallaxSections, null, 2)
-		)
-		console.log('Updating position for id:', id, 'to position:', position)
 		setParallaxSections((prev) => {
 			const updated = prev.map((s) => {
 				if (s.id === id) {
-					console.log(
-						'Found matching section:',
-						s.id,
-						'updating from',
-						s.position,
-						'to',
-						position
-					)
 					const newSection = { ...s, position }
-					console.log('New section data:', JSON.stringify(newSection, null, 2))
 					return newSection
 				}
 				return s
 			})
-			console.log('After update - New sections:', JSON.stringify(updated, null, 2))
 			return updated.sort((a, b) => (a?.position ?? 0) - (b?.position ?? 0))
 		})
 	}

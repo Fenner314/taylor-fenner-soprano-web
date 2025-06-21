@@ -2,9 +2,19 @@ import React from 'react'
 import './Title.css'
 import { BlockBase } from '../../../types/sanity'
 
+interface TitleBlock extends BlockBase {
+	text?: string
+	level?: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6'
+	alignment?: 'left' | 'center' | 'right'
+	color?: string
+	styles?: {
+		[key: string]: string | number
+	}
+}
+
 interface TitleProps {
-	block?: BlockBase
-	children: React.ReactNode
+	block?: TitleBlock
+	children?: React.ReactNode
 }
 
 const Title: React.FC<TitleProps> = ({ block, children }) => {
@@ -14,8 +24,9 @@ const Title: React.FC<TitleProps> = ({ block, children }) => {
 			data-page={children}
 			data-label={block?.label}
 		>
-			<h1 className='highlighted-title'>{children}</h1>
-			<div className='underline'></div>
+			<h2 className='title' style={{ color: block?.color }}>
+				{children ?? block?.text}
+			</h2>
 		</div>
 	)
 }

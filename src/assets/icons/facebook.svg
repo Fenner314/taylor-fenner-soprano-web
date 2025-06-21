@@ -1,25 +1,3 @@
-<svg width="24" height="27" viewBox="0 0 24 27" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="23.1579" height="27" fill="url(#pattern0_14_53)"/>
-<rect width="23.1579" height="27" fill="url(#pattern1_14_53)"/>
-<rect width="23.1579" height="27" fill="url(#pattern2_14_53)"/>
-<rect width="23.1579" height="27" fill="url(#pattern3_14_53)"/>
-<rect width="23.1579" height="27" fill="url(#pattern4_14_53)"/>
-<defs>
-<pattern id="pattern0_14_53" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_14_53" transform="matrix(0.0233182 0 0 0.02 -0.0829546 0)"/>
-</pattern>
-<pattern id="pattern1_14_53" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_14_53" transform="matrix(0.0233182 0 0 0.02 -0.0829546 0)"/>
-</pattern>
-<pattern id="pattern2_14_53" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_14_53" transform="matrix(0.0233182 0 0 0.02 -0.0829546 0)"/>
-</pattern>
-<pattern id="pattern3_14_53" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_14_53" transform="matrix(0.0233182 0 0 0.02 -0.0829546 0)"/>
-</pattern>
-<pattern id="pattern4_14_53" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_14_53" transform="matrix(0.0233182 0 0 0.02 -0.0829546 0)"/>
-</pattern>
-<image id="image0_14_53" width="50" height="50" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAYAAAAeP4ixAAAACXBIWXMAAAsTAAALEwEAmpwYAAABJElEQVR4nO2ZTUoDQRBG31LiDbIQ4g3EY2RCQMHzSCTgTXIBN1locops3QVc6gxusigRsjEk0z2TGfuH70Ftu+p1dTUzNAgh2jIF1kAFWOCogBUwaSrxHEHxdiLmTTphkUfhI7KOoFBzxJuPSBlBoeaILx8RSySchC7QJHJA6J02deSA/9jN35txBtwAl8AAGAEPwDKVjrwD1x3U4KRPiR1w6y6B6EUWPgWQgMhdLiJXR/LdAxvgu+FaQUUujuT7aLlWUJEu8zmRCBl3pA3DXEQmuYg85iLykovINkYRn+S9bZJJBHXEdLRq0IygGUEzUodmBM0IvcxImcAnyqePyCoBkdcu/9BCiozxZN7z7XVOPNGQYv96GsPjaLk/Tt6dEELwhx+snvc1Sojn9AAAAABJRU5ErkJggg=="/>
-</defs>
+<svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
 </svg>

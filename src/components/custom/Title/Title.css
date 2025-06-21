@@ -1,35 +1,10 @@
 .title-container {
 	position: relative;
 	text-align: left;
-	padding: 2rem 0;
 }
 
-.title-container[data-page='Biography'] {
-	background-color: var(--bg-light);
-}
-
-.title-container:not([data-label='events-component']) {
-	padding-left: 2rem;
-}
-
-.highlighted-title {
-	margin-bottom: 0;
-	position: relative;
-	z-index: 1;
-}
-
-.highlighted-title::before {
-	content: '';
-	width: 100px;
-	height: 12px;
-	background-color: rgba(var(--secondary-rgb), 0.6);
-	position: absolute;
-	bottom: 2px;
-	z-index: -1;
-}
-
-@media only screen and (max-width: 768px) {
-	.title-container:not([data-label='events-component']) {
-		padding-left: 1rem;
-	}
+.title-container .title {
+	font-size: var(--font-size-4xl);
+	font-weight: var(--font-weight-normal);
+	font-style: italic;
 }
