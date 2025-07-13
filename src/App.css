@@ -60,6 +60,7 @@
 
 .parallax-front {
 	transform: translateZ(0);
+	padding-bottom: 68px;
 }
 
 /* Parallax Background Styling */
