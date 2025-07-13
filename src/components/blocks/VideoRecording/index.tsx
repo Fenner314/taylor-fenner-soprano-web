@@ -8,7 +8,8 @@ interface VideoRecordingProps {
 		_type: 'videoRecording'
 		title: string
 		description?: string
-		videoUrl: string
+		videoUrl?: string
+		url?: string
 	}
 }
 
@@ -20,7 +21,8 @@ const VideoRecording: React.FC<VideoRecordingProps> = ({ block }) => {
 		return match && match[2].length === 11 ? match[2] : null
 	}
 
-	const videoId = getYouTubeId(block.videoUrl)
+	const url = block.videoUrl || block.url || ''
+	const videoId = getYouTubeId(url)
 
 	if (!videoId) {
 		console.warn('Invalid YouTube URL:', block.videoUrl)
