@@ -1,5 +1,7 @@
 import React from 'react'
 import './VideoRecording.css'
+import { PortableText } from '@portabletext/react'
+import { portableTextComponents } from '../../../utils/portableTextComponents'
 
 interface VideoRecordingProps {
 	block: {
@@ -7,7 +9,7 @@ interface VideoRecordingProps {
 		_id?: string
 		_type: 'videoRecording'
 		title: string
-		description?: string
+		description?: any
 		videoUrl?: string
 		url?: string
 	}
@@ -48,7 +50,12 @@ const VideoRecording: React.FC<VideoRecordingProps> = ({ block }) => {
 			</div>
 			<h3 className='video-title'>{block.title}</h3>
 			{block.description && (
-				<p className='video-description'>{block.description}</p>
+				<div className='video-description rich-text'>
+					<PortableText
+						value={block.description?.content}
+						components={portableTextComponents}
+					/>
+				</div>
 			)}
 		</div>
 	)

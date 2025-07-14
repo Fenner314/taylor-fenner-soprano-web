@@ -18,6 +18,10 @@
 	margin: auto;
 }
 
+.block-wrapper[data-label='media-mediaGrid'] {
+	margin-bottom: 5rem;
+}
+
 /* Responsive adjustments */
 @media (min-width: 768px) {
 	.block-wrapper {

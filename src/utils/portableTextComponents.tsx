@@ -54,7 +54,7 @@ export const portableTextComponents = {
 			</blockquote>
 		),
 		normal: ({ children }: any) => (
-			<p style={{ marginBottom: '1rem' }}>{children}</p>
+			<p style={{ marginBottom: '0' }}>{children}</p>
 		),
 	},
 }
