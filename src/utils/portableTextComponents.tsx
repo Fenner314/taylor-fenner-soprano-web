@@ -1,6 +1,9 @@
 import { urlForImage } from '../lib/sanity'
 
-export const portableTextComponents = {
+// Create a function that returns components with configurable spacing
+export const createPortableTextComponents = (
+	options = { paragraphSpacing: true }
+) => ({
 	types: {
 		image: ({ value }: any) => (
 			<img
@@ -54,7 +57,17 @@ export const portableTextComponents = {
 			</blockquote>
 		),
 		normal: ({ children }: any) => (
-			<p style={{ marginBottom: '0' }}>{children}</p>
+			<p style={{ marginBottom: options.paragraphSpacing ? '1rem' : '0' }}>
+				{children}
+			</p>
 		),
 	},
-}
+})
+
+// Default export with spacing
+export const portableTextComponents = createPortableTextComponents()
+
+// Export version without spacing
+export const portableTextComponentsNoSpacing = createPortableTextComponents({
+	paragraphSpacing: false,
+})

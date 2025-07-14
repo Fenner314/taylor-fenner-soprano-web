@@ -7,7 +7,7 @@ interface DownloadsProps {
 		_id?: string
 		_type: 'downloads'
 		title?: string
-		downloads?: Array<{
+		items?: Array<{
 			_id: string
 			title: string
 			description?: string
@@ -21,9 +21,9 @@ const Downloads: React.FC<DownloadsProps> = ({ block }) => {
 	return (
 		<div key={block._key || block._id} className='downloads-section'>
 			{block.title && <h2 className='section-title'>{block.title}</h2>}
-			{block.downloads && block.downloads.length > 0 && (
+			{block.items && block.items.length > 0 && (
 				<div className='downloads-grid'>
-					{block.downloads.map((download) => (
+					{block.items.map((download) => (
 						<div key={download._id} className='download-item'>
 							<h4>
 								<a

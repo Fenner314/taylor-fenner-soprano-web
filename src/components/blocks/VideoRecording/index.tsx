@@ -1,7 +1,10 @@
 import React from 'react'
 import './VideoRecording.css'
 import { PortableText } from '@portabletext/react'
-import { portableTextComponents } from '../../../utils/portableTextComponents'
+import {
+	createPortableTextComponents,
+	portableTextComponents,
+} from '../../../utils/portableTextComponents'
 
 interface VideoRecordingProps {
 	block: {
@@ -53,7 +56,9 @@ const VideoRecording: React.FC<VideoRecordingProps> = ({ block }) => {
 				<div className='video-description rich-text'>
 					<PortableText
 						value={block.description?.content}
-						components={portableTextComponents}
+						components={createPortableTextComponents({
+							paragraphSpacing: false,
+						})}
 					/>
 				</div>
 			)}

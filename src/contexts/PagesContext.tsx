@@ -109,8 +109,11 @@ export const PagesProvider: React.FC<{ children: React.ReactNode }> = ({
                 customComponent,
                 index,
                 content[]{
-                    ...,
-                    downloads[]->,
+										...,
+										_type == "downloads" => {
+												...,
+												items[]->
+										},
                     button->,
                     "images": images[]{
                         "_key": _key,

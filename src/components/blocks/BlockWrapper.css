@@ -22,6 +22,11 @@
 	margin-bottom: 5rem;
 }
 
+.block-wrapper[data-label='about-blockContent-biography'] {
+	padding-top: 4rem !important;
+	min-height: 584px;
+}
+
 /* Responsive adjustments */
 @media (min-width: 768px) {
 	.block-wrapper {
