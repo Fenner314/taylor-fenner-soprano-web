@@ -26,6 +26,7 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 	const recaptchaRef = useRef<ReCAPTCHA>(null)
 
 	const handleSubmit = async (e: React.FormEvent) => {
+		debugger
 		e.preventDefault()
 		setIsSubmitting(true)
 		setIsVerifying(true)
@@ -76,6 +77,7 @@ const ContactForm: React.FC<ContactFormProps> = () => {
 						: 'Sorry, something went wrong. Please try again later.',
 			})
 		} finally {
+			setIsVerifying(false)
 			setIsSubmitting(false)
 			setTimeout(() => {
 				setStatus({ type: null, message: '' })
