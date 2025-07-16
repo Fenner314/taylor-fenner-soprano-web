@@ -32,7 +32,7 @@ function App() {
 }
 
 const AppContent = () => {
-	const { parallaxSections } = usePagesContext()
+	const { isLoading, parallaxSections } = usePagesContext()
 
 	useEffect(() => {
 		emailjs.init(process.env.REACT_APP_EMAILJS_PUBLIC_KEY!)
@@ -54,7 +54,7 @@ const AppContent = () => {
 						</div>
 					)
 				})}
-				<div className='parallax-layer parallax-front'>
+				<div className={`parallax-layer ${isLoading ? '' : 'parallax-front'}`}>
 					<Layout>
 						<Routes>
 							<Route path='/' element={<DynamicPage />} />
